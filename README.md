@@ -1,50 +1,108 @@
-# Welcome to your Expo app 👋
+# GoalTracker App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+GoalTracker is a React Native app built with Expo and TypeScript that helps users set and track personal goals. Users can browse goal templates, learn why they matter, and add them to their homepage for daily tracking.
 
-## Get started
+## ✨ Features
 
-1. Install dependencies
+* Explore a library of goal templates with descriptions and visuals
+* Add goals to your personal dashboard
+* Animated splash screen using a custom video
+* Modular component structure for easy scaling
+
+## 💦 Tech Stack
+
+* **React Native** (with Expo)
+* **TypeScript**
+* **expo-router** for navigation
+* **expo-av** for splash screen animation
+* **Static assets** organized under `/assets`
+
+## 📦 Installation
+
+1. Clone the repo:
+
+   ```bash
+   git clone https://github.com/your-username/goaltracker.git
+   cd goaltracker
+   ```
+
+2. Install dependencies:
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Run the app:
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📁 Project Structure
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+/assets
+  /images         ← Static background images for goal cards
+  /videos         ← Splash screen animation
+/components       ← Reusable UI components (e.g. InfoGoal)
+/app/(tabs)       ← App screens (Explore, Home, etc.)
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 🤩 Adding a New Goal Template
 
-To learn more about developing your project with Expo, look at the following resources:
+1. Add a new `.png` file to `assets/images/`.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+2. Open `imageMap` (in `app/(tabs)/explore.tsx`), and register the image:
 
-## Join the community
+   ```ts
+   "newGoalBackground.png": require('@/assets/images/newGoalBackground.png')
+   ```
 
-Join our community of developers creating universal apps.
+3. Inside the JSON file (in `data/goalTemplates.json`), add a new entry:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+   ```json
+   {
+     "id": "new goal",
+     "title": "New Goal",
+     "description": "Why this goal is important...",
+     "backgroundImage": "newGoalBackground.png"
+   }
+   ```
+
+
+---
+
+## 🎬 Splash Screen (Video)
+
+* Splash screen is handled via a custom video using `expo-av`.
+* The video is centered with padding and plays automatically on app load.
+* Be aware that `expo-av` is deprecating; migration to `expo-video` may be required in the future.
+
+---
+
+## 🔮 Coming Soon
+
+* Custom goal creation
+* Habit tracking and analytics
+* User accounts and syncing
+
+---
+
+## 🧠 Notes
+
+* Metro (React Native's bundler) does **not** support dynamic `require()` — image and video assets must be statically referenced.
+* The goal card descriptions are scrollable. You can adjust the scroll area height via the `descriptionBox` style in the `InfoGoal` component.
+
+---
+
+## 🚫 License
+
+Copyright © 2025 Kaylee Wright
+
+This project is private and proprietary. All rights reserved.  
+You may not use, copy, distribute, or modify any part of this code without explicit permission from the author.
+
