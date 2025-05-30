@@ -9,7 +9,7 @@ const TEXT_SIZE = 40
 export default function AddGoal({ onPress } : Props) {
     return (
         <Pressable style={styles.button} onPress={onPress}>
-            <SimpleLineIcons name="plus" size={TEXT_SIZE} color="#FFFFE8" />
+            <SimpleLineIcons name="plus" size={TEXT_SIZE} color="#fdfdfd" />
             {/* <Text style={styles.text}>new goal</Text> */}
         </Pressable>
     );
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     },
     text: {
         padding: 5,
-        color: '#FFFFE8',
+        color: '#fdfdfd',
         fontSize: TEXT_SIZE,
     }
 })
