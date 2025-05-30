@@ -6,34 +6,40 @@ export default function TabsLayout() {
   <Tabs
     screenOptions={{
         headerStyle: {
-        backgroundColor: 'purple',
+        backgroundColor: '#B37EAC',
         },
         // headerShown: false, //toggle this on and off to make header appear/disappear
-        headerTintColor: '#fff',
+        headerTintColor: '#fdfdfd',
         headerTitleStyle: {
         fontWeight: 'bold',
+        },
+        tabBarStyle: {
+            backgroundColor: '#fdfdfd'
         },
     }}>
     <Tabs.Screen name="index"
     options={{
-        title: 'home',
+        title: 'Home',
+        tabBarActiveTintColor: "#B37EAC",
         tabBarIcon: ({ color, focused }) => (
             <Ionicons 
                 name={focused ? 'home-sharp' : 'home-outline'}
                 color={color}
-                size={24}
+                size={22}
             />
         ),
+        
     }} />
     {/* <Tabs.Screen name="journal" /> */}
     <Tabs.Screen name="explore"
     options={{
-        title: 'explore',
+        title: 'Explore',
+        tabBarActiveTintColor: "#B37EAC",
         tabBarIcon: ({ color, focused }) => (
             <Ionicons
                 name={focused ? 'compass' : 'compass-outline'}
                 color={color}
-                size={24}
+                size={22}
             />
         )
     }} />

@@ -13,14 +13,12 @@ const FONT_SIZE = 22
 export default function Index() {
   return (
     <View style={styles.container}>
-        <Text style={styles.header}>   this week   <SimpleLineIcons name="pencil" size={FONT_SIZE}/></Text>
+        <Text style={styles.thisWeek}>   this week   <SimpleLineIcons name="pencil" size={FONT_SIZE}/></Text>
         <View style={styles.goalsContainer}>
           <AddGoal onPress={() => router.push('/explore')}></AddGoal>
           <AddGoal onPress={() => router.push('/explore')}></AddGoal>
           <AddGoal onPress={() => router.push('/explore')}></AddGoal>
         </View>
-        <Link href='/explore' style={styles.link}>Explore Goals</Link>
-        <Text style={styles.body}>this is a different text block.</Text>
     </View>
   );
 }
@@ -29,30 +27,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // justifyContent: 'space-between',
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#FDFDFD',
   },
   goalsContainer: {
-    backgroundColor: 'lightgrey',
     marginTop: 20,
     marginHorizontal: 40,
   },
-  header: {
+  thisWeek: {
     marginTop: 0,
     padding: 10,
     textAlign: 'center',
     fontSize: FONT_SIZE,
-    color: 'grey',
+    color: '#fdfdfd',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#B37EAC',
   },
   body: {
     textAlign: 'left',
     margin: 50,
-  },
-  link: {
-    textDecorationLine: "underline",
-    color:'blue',
-    textAlign: 'center',
   },
 })
