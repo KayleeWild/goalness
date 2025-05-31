@@ -9,7 +9,7 @@ Goalness is a React Native app built with Expo and TypeScript that helps users s
 * Animated splash screen using a custom video
 * Modular component structure for easy scaling
 
-## 💦 Tech Stack
+## 💻 Tech Stack
 
 * **React Native** (with Expo)
 * **TypeScript**
