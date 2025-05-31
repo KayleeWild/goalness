@@ -1,6 +1,6 @@
-# GoalTracker App
+# Goalness
 
-GoalTracker is a React Native app built with Expo and TypeScript that helps users set and track personal goals. Users can browse goal templates, learn why they matter, and add them to their homepage for daily tracking.
+Goalness is a React Native app built with Expo and TypeScript that helps users set and track personal goals. Users can browse goal templates, learn why they matter, and add them to their homepage for daily tracking. The name "goalness" comes from a blend between the words goal and wellness. 
 
 ## ✨ Features
 
@@ -14,8 +14,6 @@ GoalTracker is a React Native app built with Expo and TypeScript that helps user
 * **React Native** (with Expo)
 * **TypeScript**
 * **expo-router** for navigation
-* **expo-av** for splash screen animation
-* **Static assets** organized under `/assets`
 
 ## 📦 Installation
 
@@ -31,12 +29,15 @@ GoalTracker is a React Native app built with Expo and TypeScript that helps user
    ```bash
    npm install
    ```
+   - LTS of Node.js
+   - May need to install various packages as prompted
 
 3. Run the app:
 
    ```bash
    npx expo start
    ```
+   - I recommend installing the Expo Go app on your mobile device for testing. It's free on the app/play stores
 
 ---
 
@@ -46,7 +47,7 @@ GoalTracker is a React Native app built with Expo and TypeScript that helps user
 /assets
   /images         ← Static background images for goal cards
   /videos         ← Splash screen animation
-/components       ← Reusable UI components (e.g. InfoGoal)
+/components       ← Reusable UI components
 /app/(tabs)       ← App screens (Explore, Home, etc.)
 ```
 
@@ -89,13 +90,6 @@ GoalTracker is a React Native app built with Expo and TypeScript that helps user
 * Custom goal creation
 * Habit tracking and analytics
 * User accounts and syncing
-
----
-
-## 🧠 Notes
-
-* Metro (React Native's bundler) does **not** support dynamic `require()` — image and video assets must be statically referenced.
-* The goal card descriptions are scrollable. You can adjust the scroll area height via the `descriptionBox` style in the `InfoGoal` component.
 
 ---
 
