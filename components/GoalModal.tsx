@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     overlay: {
         flex: 1,
         padding: 10,
+        justifyContent: 'space-evenly',
     },
     closeButton: {
         alignSelf: 'flex-end',
@@ -88,7 +89,8 @@ const styles = StyleSheet.create({
         color: '#cccccc',
         fontWeight: 'bold',
         marginTop: -10,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        marginBottom: 10,
     },
     descriptionBox: {
         maxHeight: 200,
@@ -97,21 +99,20 @@ const styles = StyleSheet.create({
     description: {
         color: '#cccccc',
         fontSize: 20,
-        marginTop: 10,
     },
     button: {
-        backgroundColor: '#42033D',
+        backgroundColor: '#B39C4D',
         padding: 10,
         alignSelf: 'center',
-        marginTop: 25,
+        marginVertical: 25,
         borderRadius: 8,
-        borderWidth: 1,
+        // borderWidth: 1,
         borderColor: '#cccccc',
     },
     buttonText: {
-        color: '#fdfdfd',
+        color: '#1C1D21',
         fontWeight: '600',
-        fontSize: 30,
-        padding: 10,
+        fontSize: 20,
+        paddingHorizontal: '30%',
     },
 })

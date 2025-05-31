@@ -31,8 +31,8 @@ export default function GoalSetupModal({visible, onClose, onConfirm}: Props) {
             <View style={styles.overlay}>
                 <Pressable style={styles.backdrop} onPress={onClose} />
                 <View style={styles.modalContent}>
-                    <Text style={styles.header}>Set Your Water Goal</Text>
-                    <Text style={styles.label}>Daily Intake (oz)</Text>
+                    {/* fix this to represent individual data later */}
+                    <Text style={styles.header}>Based on the average person...</Text> 
 
                     {isEditing ? (
                         <TextInput 
@@ -48,6 +48,7 @@ export default function GoalSetupModal({visible, onClose, onConfirm}: Props) {
                             <Text style={styles.amount}>{inputValue} oz</Text>
                         </TouchableOpacity>
                     )}
+                    <Text style={styles.label}>is your recommended daily amount.</Text>
 
                     <View style={styles.bottomRow}>
                         <TouchableOpacity onPress={() => {
@@ -72,7 +73,7 @@ export default function GoalSetupModal({visible, onClose, onConfirm}: Props) {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    // backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -80,55 +81,62 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   modalContent: {
-    backgroundColor: '#fff',
-    padding: 24,
+    backgroundColor: '#1C1D21',
+    padding: 34,
     borderRadius: 20,
-    width: 300,
+    width: 335,
+    height: 430,
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   header: {
     fontSize: 24,
     fontWeight: '600',
     marginBottom: 16,
-    color: '#333',
+    color: '#858585',
+    textAlign: 'center'
   },
   label: {
     fontSize: 18,
     marginBottom: 8,
-    color: '#666',
+    color: '#858585',
+    textAlign: 'center',
   },
   amount: {
-    fontSize: 32,
+    fontSize: 80,
     fontWeight: 'bold',
-    color: '#444',
+    color: '#858585',
     marginBottom: 8,
   },
   input: {
-    fontSize: 32,
+    fontSize: 80,
+    fontWeight: 'bold',
     borderBottomWidth: 1,
-    borderColor: '#ccc',
-    width: 120,
+    borderColor: '#858585',
+    // width: 120,
     textAlign: 'center',
     marginBottom: 8,
+    color: '#858585'
   },
   bottomRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    justifyContent: 'space-around',
     width: '100%',
     marginTop: 20,
   },
   changeText: {
-    fontSize: 16,
-    color: '#007AFF',
+    fontSize: 18,
+    color: '#b37eac',
   },
   goButton: {
-    backgroundColor: '#77A6B6',
+    backgroundColor: '#B37EAC',
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 10,
   },
   goText: {
-    color: '#fff',
+    color: '#1C1D21',
     fontWeight: '600',
     fontSize: 18,
   },

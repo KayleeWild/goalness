@@ -57,5 +57,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
+    paddingVertical: 10,
   },
 });
