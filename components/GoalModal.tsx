@@ -1,6 +1,7 @@
-import { Modal, StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { Modal, StyleSheet, View, Text, TouchableOpacity, ImageSourcePropType, ScrollView, Pressable } from "react-native";
 import { ImageBackground } from "expo-image";
-import { ImageSourcePropType, ScrollView, Pressable } from "react-native";
+import { useState } from "react";
+import GoalSetupModal from "./GoalSetupModal";
 
 type Props = {
     visible: boolean;
@@ -15,6 +16,8 @@ type Props = {
 const background = require('@/assets/images/modalBackground.png')
 
 export default function GoalModal({visible, title, description, onAdd, onClose} : Props) {
+    const [showSetup, setShowSetup] = useState(false); 
+
     return (
         <Modal visible={visible} animationType="fade" transparent>
             <View style={styles.modalOverlay}>
@@ -29,14 +32,24 @@ export default function GoalModal({visible, title, description, onAdd, onClose} 
                             <ScrollView style={styles.descriptionBox}>
                                 <Text style={styles.description}>{description}</Text>
                             </ScrollView>
-                            <TouchableOpacity onPress={onAdd} style={styles.button} >
+                            <TouchableOpacity onPress={() => setShowSetup(true)} style={styles.button} >
                                 <Text style={styles.buttonText}>Add Goal</Text>
                             </TouchableOpacity>
                         </View>
                     </ImageBackground>
                 </View>
+                <GoalSetupModal 
+                    visible={showSetup}
+                    onClose={() => setShowSetup(false)}
+                    onConfirm={(intakeAmount) => {
+                        console.log("Confirmed intake amount: ", intakeAmount);
+                        setShowSetup(false);
+                        onAdd();
+                    }}
+                />
             </View>
         </Modal>
+        
     );
 };
 
