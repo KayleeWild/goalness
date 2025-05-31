@@ -1,8 +1,11 @@
+import { router } from "expo-router";
+import { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import goalTemplates from "@/data/goalTemplates.json";
 import GoalCard from "@/components/GoalCard";
 import GoalModal from "@/components/GoalModal";
-import { useState } from "react";
+import { useGoalContext } from "@/context/GoalContext";
+
 
 // Dynamically import images
 // ⚠️ Make sure to update this when adding new images!! ➡️ "filename.png": require('path/to/image/filename.png'),
@@ -13,6 +16,7 @@ const imageMap: { [key: string]: any } = {
 
 export default function ExploreScreen() {
   const [selectedGoal, setSelectedGoal] = useState<null | typeof goalTemplates[0]>(null);
+  const { addGoal } = useGoalContext();
 
   return (
     <ScrollView style={styles.container}>
@@ -23,7 +27,6 @@ export default function ExploreScreen() {
                 title={goal.title}
                 description={goal.description}
                 backgroundImage={imageMap[goal.image]}
-                onAdd={() => console.log(`Added goal: ${goal.id}`)}
                 onPress={() => setSelectedGoal(goal)}
                 />
             ))}
@@ -35,9 +38,11 @@ export default function ExploreScreen() {
                 title={selectedGoal.title}
                 description={selectedGoal.description}
                 backgroundImage={imageMap[selectedGoal.image]}
-                onAdd={() => {
-                    console.log(`Added goal: ${selectedGoal.id}`);
-                    setSelectedGoal(null);
+                onAdd={(intakeAmount) => {
+                  addGoal({ amount: intakeAmount, type: selectedGoal.title });
+                  setSelectedGoal(null);
+                  router.push('/');
+                  console.log(`Added goal: ${selectedGoal.title}`);
                 }}
                 onClose={() => setSelectedGoal(null)}
             />

@@ -6,7 +6,6 @@ type Props = {
     title: string;
     description: string;
     backgroundImage: ImageSourcePropType;
-    onAdd: () => void;
     onPress: () => void;
 };
 

@@ -9,7 +9,7 @@ type Props = {
     title: string;
     description: string;
     backgroundImage: ImageSourcePropType;
-    onAdd: () => void;
+    onAdd: (intakeAmount: number) => void;
     onClose: () => void;
 };
 
@@ -44,7 +44,7 @@ export default function GoalModal({visible, title, description, onAdd, onClose} 
                     onConfirm={(intakeAmount) => {
                         console.log("Confirmed intake amount: ", intakeAmount);
                         setShowSetup(false);
-                        onAdd();
+                        onAdd(intakeAmount);
                     }}
                 />
             </View>
