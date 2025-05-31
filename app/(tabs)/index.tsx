@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { useState, useEffect, useCallback } from "react";
+import { Text, View, StyleSheet, Alert, Pressable } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { SwipeListView } from 'react-native-swipe-list-view';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
+import { useFocusEffect } from "@react-navigation/native";
 import AddGoal from "@/components/AddGoal";
 import GoalSummary from "@/components/GoalSummary";
 import { useGoalContext } from "@/context/GoalContext";
@@ -13,8 +15,45 @@ const FONT_SIZE = 22
 
 export default function Index() {
   const [currentGoal, setCurrentGoal] = useState<{ amount: number; type: string } | null>(null); // null = not added yet
+  const [editMode, setEditMode] =useState(false);
   const { goalAmount, goalType, refresh } = useLocalSearchParams();
-  const { goals } = useGoalContext();
+  const { goals, removeGoal } = useGoalContext();
+
+  const renderGoals = () => {
+    const elements = [];
+
+    for (let i = 0; i < 3; i++) {
+      if (goals[i]) {
+        elements.push(
+          <View key={i} style={styles.goalRow}>
+            <View style={{ flex: 1 }}>
+              <GoalSummary amount={goals[i].amount} type={goals[i].type} />
+            </View>
+            {editMode && (
+              <Pressable onPress={() => [removeGoal(i), setEditMode(false)]} style={styles.trashButton}>
+                <SimpleLineIcons name="trash" size={20} color="#b00" />
+              </Pressable>
+            )}
+          </View>
+        );
+      } else {
+        elements.push(
+          <AddGoal
+            key={i}
+            onPress={() => {
+              if (goals.length >= 3) {
+                Alert.alert("Limit Reached", "You can only have up to 3 goals at a time.");
+              } else {
+                router.push('/explore');
+              }
+            }}
+          />
+        );
+      }
+    }
+
+    return elements;
+  }
 
   useEffect(() => {
     if (goalAmount && goalType) {
@@ -25,21 +64,22 @@ export default function Index() {
     }
   }, [goalAmount, goalType, refresh]);
 
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setEditMode(false);
+      };
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
+      <Pressable onPress={() => setEditMode(!editMode)}>
         <Text style={styles.thisWeek}>   this week   <SimpleLineIcons name="pencil" size={FONT_SIZE}/></Text>
-        <View style={styles.goalsContainer}>
-          {goals.length > 0 ? (
-            goals.map((goal, index) => (
-              <GoalSummary key={index} amount={goal.amount} type={goal.type} />
-            ))
-          ) : (
-            <AddGoal onPress={() => router.push('/explore')}></AddGoal>
-          )}
-          {/* placeholder 2 & 3 */}
-          {/* <AddGoal onPress={() => router.push('/explore')}></AddGoal>
-          <AddGoal onPress={() => router.push('/explore')}></AddGoal> */}
-        </View>
+      </Pressable>
+      <View style={styles.goalsContainer}>
+        {renderGoals()}
+      </View>
     </View>
   );
 }
@@ -51,7 +91,7 @@ const styles = StyleSheet.create({
   },
   goalsContainer: {
     marginTop: 20,
-    marginHorizontal: 40,
+    marginHorizontal: 20,
   },
   thisWeek: {
     marginTop: 0,
@@ -62,5 +102,13 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     backgroundColor: '#B37EAC',
+  },
+  goalRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  trashButton: {
+    padding: 10,
+    marginLeft: 10,
   },
 })

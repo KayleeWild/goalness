@@ -1,7 +1,8 @@
-import { Modal, StyleSheet, View, Text, TouchableOpacity, ImageSourcePropType, ScrollView, Pressable } from "react-native";
+import { Modal, StyleSheet, View, Text, TouchableOpacity, ImageSourcePropType, ScrollView, Pressable, Alert } from "react-native";
 import { ImageBackground } from "expo-image";
 import { useState } from "react";
 import GoalSetupModal from "./GoalSetupModal";
+import { useGoalContext } from "@/context/GoalContext";
 
 type Props = {
     visible: boolean;
@@ -17,6 +18,7 @@ const background = require('@/assets/images/modalBackground.png')
 
 export default function GoalModal({visible, title, description, onAdd, onClose} : Props) {
     const [showSetup, setShowSetup] = useState(false); 
+    const { goals } = useGoalContext();
 
     return (
         <Modal visible={visible} animationType="fade" transparent>
@@ -32,7 +34,15 @@ export default function GoalModal({visible, title, description, onAdd, onClose} 
                             <ScrollView style={styles.descriptionBox}>
                                 <Text style={styles.description}>{description}</Text>
                             </ScrollView>
-                            <TouchableOpacity onPress={() => setShowSetup(true)} style={styles.button} >
+                            <TouchableOpacity onPress={() => {
+                                if (goals.length >= 3) {
+                                    Alert.alert("Limit Reached", "You can only set up to 3 goals at once.");
+                                    setShowSetup(false)
+                                    return; 
+                                } else {
+                                    setShowSetup(true)
+                                }
+                            }} style={styles.button} >
                                 <Text style={styles.buttonText}>Add Goal</Text>
                             </TouchableOpacity>
                         </View>

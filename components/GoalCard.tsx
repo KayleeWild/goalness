@@ -9,7 +9,7 @@ type Props = {
     onPress: () => void;
 };
 
-export default function InfoGoal({title, backgroundImage, onPress} : Props) {
+export default function GoalCard({title, backgroundImage, onPress} : Props) {
     return (
         <TouchableOpacity onPress={onPress}>
             <ImageBackground source={backgroundImage} style={styles.card} imageStyle={styles.background}>
