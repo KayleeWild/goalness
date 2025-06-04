@@ -1,5 +1,6 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Goal = {
     amount: number;
@@ -18,6 +19,36 @@ const GoalContext = createContext<GoalContextType | undefined>(undefined);
 export const GoalProvider = ({ children }: { children: ReactNode }) => {
     const [goals, setGoals] = useState<Goal[]>([]);
 
+    // ⬇ AsyncStorage functions:
+    useEffect(() => {
+        const loadGoals = async () => {
+            try {
+                const json = await AsyncStorage.getItem('userGoals');
+                if (json) {
+                    const savedGoals = JSON.parse(json);
+                    setGoals(savedGoals);
+                }
+            } catch (e) {
+                console.error('Failed to load goals', e);
+            }
+        };
+
+        loadGoals();
+    }, []);
+
+    useEffect(() => {
+        const saveGoals = async () => {
+            try {
+                await AsyncStorage.setItem('userGoals', JSON.stringify(goals));
+            } catch (e) {
+                console.error('Failed to save goals', e);
+            }
+        };
+
+        saveGoals();
+    }, [goals]);
+
+    // ⬇ Goal manipulation functions:
     const addGoal = (goal: Goal) => {
         setGoals(prev => [...prev, goal]);
     };
