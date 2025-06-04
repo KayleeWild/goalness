@@ -39,7 +39,7 @@ export default function ExploreScreen() {
                 description={selectedGoal.description}
                 // backgroundImage={imageMap[selectedGoal.image]}
                 onAdd={(intakeAmount) => {
-                  addGoal({ amount: intakeAmount, type: selectedGoal.title });
+                  addGoal({ amount: intakeAmount, title: selectedGoal.title });
                   setSelectedGoal(null);
                   router.push('/');
                   console.log(`Added goal: ${selectedGoal.title}`);

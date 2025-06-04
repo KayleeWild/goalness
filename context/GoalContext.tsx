@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Goal = {
     amount: number;
-    type: string;
+    title: string;
 };
 
 type GoalContextType = {

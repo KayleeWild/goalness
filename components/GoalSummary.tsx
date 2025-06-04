@@ -1,14 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native';
 
 type Props = {
-    amount: number;
-    type: string;
+    amount: number; // Goal amount to track (ie. 100 oz, 8 hrs, etc.)
+    title: string; // Selected goal's title
 }
 
-export default function GoalSummary({amount, type}: Props) {
+export default function GoalSummary({amount, title}: Props) {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>{type} Goal</Text>
+            <Text style={styles.text}>{title}</Text>
             <Text style={styles.amount}>{amount} oz/day </Text>
         </View>
     );

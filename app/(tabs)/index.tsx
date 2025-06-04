@@ -14,9 +14,9 @@ const FONT_SIZE = 22
 
 
 export default function Index() {
-  const [currentGoal, setCurrentGoal] = useState<{ amount: number; type: string } | null>(null); // null = not added yet
+  const [currentGoal, setCurrentGoal] = useState<{ amount: number; title: string } | null>(null); // null = not added yet
   const [editMode, setEditMode] =useState(false);
-  const { goalAmount, goalType, refresh } = useLocalSearchParams();
+  const { goalAmount, goalTitle, refresh } = useLocalSearchParams();
   const { goals, removeGoal } = useGoalContext();
 
   const renderGoals = () => {
@@ -27,7 +27,7 @@ export default function Index() {
         elements.push(
           <View key={i} style={styles.goalRow}>
             <View style={{ flex: 1 }}>
-              <GoalSummary amount={goals[i].amount} type={goals[i].type} />
+              <GoalSummary amount={goals[i].amount} title={goals[i].title} />
             </View>
             {editMode && (
               <Pressable onPress={() => [removeGoal(i), setEditMode(false)]} style={styles.trashButton}>
@@ -56,14 +56,15 @@ export default function Index() {
   }
 
   useEffect(() => {
-    if (goalAmount && goalType) {
+    if (goalAmount && goalTitle) {
       const parsedAmount = parseInt(goalAmount as string);
       if (!isNaN(parsedAmount)) {
-        setCurrentGoal({ amount: parsedAmount, type: goalType as string});
+        setCurrentGoal({ amount: parsedAmount, title: goalTitle as string});
       }
     }
-  }, [goalAmount, goalType, refresh]);
+  }, [goalAmount, goalTitle, refresh]);
 
+  // Turns off edit mode when user navigates away from page
   useFocusEffect(
     useCallback(() => {
       return () => {
