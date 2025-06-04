@@ -108,7 +108,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   trashButton: {
-    padding: 10,
+    padding: 20,
     marginLeft: 10,
+    backgroundColor: '#F5CCCC',
+    borderRadius: 100,
   },
 })

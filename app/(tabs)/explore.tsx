@@ -37,7 +37,7 @@ export default function ExploreScreen() {
                 visible={!!selectedGoal}
                 title={selectedGoal.title}
                 description={selectedGoal.description}
-                backgroundImage={imageMap[selectedGoal.image]}
+                // backgroundImage={imageMap[selectedGoal.image]}
                 onAdd={(intakeAmount) => {
                   addGoal({ amount: intakeAmount, type: selectedGoal.title });
                   setSelectedGoal(null);

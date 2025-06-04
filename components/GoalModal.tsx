@@ -9,7 +9,6 @@ type Props = {
     // key: string,
     title: string;
     description: string;
-    backgroundImage: ImageSourcePropType;
     onAdd: (intakeAmount: number) => void;
     onClose: () => void;
 };

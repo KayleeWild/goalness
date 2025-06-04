@@ -44,7 +44,12 @@ export default function GoalSetupModal({visible, onClose, onConfirm}: Props) {
                             onSubmitEditing={() => setIsEditing(false)}
                         />
                     ) : (
-                        <TouchableOpacity onPress={() => setIsEditing(true)}>
+                        <TouchableOpacity onPress={() => {
+                          setIsEditing(true); 
+                          setTimeout(() => {
+                              inputRef.current?.focus();
+                          }, 50);
+                        }}>
                             <Text style={styles.amount}>{inputValue} oz</Text>
                         </TouchableOpacity>
                     )}
