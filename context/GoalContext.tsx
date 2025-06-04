@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 type Goal = {
     amount: number;
     title: string;
+    increment: number;
 };
 
 type GoalContextType = {
@@ -35,7 +36,6 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
 
         loadGoals();
     }, []);
-
     useEffect(() => {
         const saveGoals = async () => {
             try {

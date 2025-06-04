@@ -9,13 +9,15 @@ type Props = {
     // key: string,
     title: string;
     description: string;
+    suggested: number;
+    unit: string;
     onAdd: (intakeAmount: number) => void;
     onClose: () => void;
 };
 
 const background = require('@/assets/images/modalBackground.png')
 
-export default function GoalModal({visible, title, description, onAdd, onClose} : Props) {
+export default function GoalModal({visible, title, description, suggested, unit, onAdd, onClose} : Props) {
     const [showSetup, setShowSetup] = useState(false); 
     const { goals } = useGoalContext();
 
@@ -49,6 +51,8 @@ export default function GoalModal({visible, title, description, onAdd, onClose} 
                 </View>
                 <GoalSetupModal 
                     visible={showSetup}
+                    unit={unit}
+                    suggested={suggested}
                     onClose={() => setShowSetup(false)}
                     onConfirm={(intakeAmount) => {
                         console.log("Confirmed intake amount: ", intakeAmount);

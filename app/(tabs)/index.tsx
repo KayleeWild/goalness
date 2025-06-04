@@ -27,7 +27,7 @@ export default function Index() {
         elements.push(
           <View key={i} style={styles.goalRow}>
             <View style={{ flex: 1 }}>
-              <GoalSummary amount={goals[i].amount} title={goals[i].title} />
+              <GoalSummary amount={goals[i].amount} title={goals[i].title} increment={goals[i].increment} />
             </View>
             {editMode && (
               <Pressable onPress={() => [removeGoal(i), setEditMode(false)]} style={styles.trashButton}>

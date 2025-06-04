@@ -3,76 +3,78 @@ import { Modal, StyleSheet, View, Text, TextInput, TouchableOpacity, Pressable }
 
 type Props = {
     visible: boolean;
+    suggested: number;
+    unit: string;
     onClose: () => void;
     onConfirm: (intakeAmount: number) => void;
 };
 
-export default function GoalSetupModal({visible, onClose, onConfirm}: Props) {
-    // States:
-    const [intakeAmount, setIntakeAmount] = useState(100); //in terms of oz. Update later with tailored value based on weight/gender 
-    const [isEditing, setIsEditing] = useState(false);
-    const [inputValue, setInputValue] = useState('100');
+export default function GoalSetupModal({visible, suggested, unit, onClose, onConfirm}: Props) {
+  // States:
+  const [intakeAmount, setIntakeAmount] = useState(100); //in terms of oz. Update later with tailored value based on weight/gender 
+  const [isEditing, setIsEditing] = useState(false);
+  const [inputValue, setInputValue] = useState(String(suggested));
 
-    const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<TextInput>(null);
 
-    // Functions:
-    const handleConfirm = () => {
-        const parsed = parseInt(inputValue);
-        if (!isNaN(parsed)) {
-            onConfirm(parsed);
-            setIsEditing(false);
-            setInputValue(String(parsed));
-        }
-        onClose();
-    };
+  // Functions:
+  const handleConfirm = () => {
+      const parsed = Number(inputValue);
+      if (!isNaN(parsed)) {
+          onConfirm(parsed);
+          setIsEditing(false);
+          setInputValue(String(inputValue));
+      }
+      onClose();
+  };
 
-    return (
-        <Modal visible={visible} transparent animationType="fade">
-            <View style={styles.overlay}>
-                <Pressable style={styles.backdrop} onPress={onClose} />
-                <View style={styles.modalContent}>
-                    {/* fix this to represent individual data later */}
-                    <Text style={styles.header}>Based on the average person...</Text> 
+  return (
+      <Modal visible={visible} transparent animationType="fade">
+          <View style={styles.overlay}>
+              <Pressable style={styles.backdrop} onPress={onClose} />
+              <View style={styles.modalContent}>
+                  {/* fix this to represent individual data later */}
+                  <Text style={styles.header}>Based on the average person...</Text> 
 
-                    {isEditing ? (
-                        <TextInput 
-                            ref={inputRef}
-                            style={styles.input}
-                            value={inputValue}
-                            keyboardType="numeric"
-                            onChangeText={setInputValue}
-                            onSubmitEditing={() => setIsEditing(false)}
-                        />
-                    ) : (
-                        <TouchableOpacity onPress={() => {
-                          setIsEditing(true); 
+                  {isEditing ? (
+                      <TextInput 
+                          ref={inputRef}
+                          style={styles.input}
+                          value={String(inputValue)}
+                          keyboardType="numeric"
+                          onChangeText={setInputValue}
+                          onSubmitEditing={() => setIsEditing(false)}
+                      />
+                  ) : (
+                      <TouchableOpacity onPress={() => {
+                        setIsEditing(true); 
+                        setTimeout(() => {
+                            inputRef.current?.focus();
+                        }, 50);
+                      }}>
+                          <Text style={styles.amount}>{inputValue} {unit}</Text>
+                      </TouchableOpacity>
+                  )}
+                  <Text style={styles.label}>is your recommended daily amount.</Text>
+
+                  <View style={styles.bottomRow}>
+                      <TouchableOpacity onPress={() => {
+                          setIsEditing(true);
                           setTimeout(() => {
                               inputRef.current?.focus();
                           }, 50);
-                        }}>
-                            <Text style={styles.amount}>{inputValue} oz</Text>
-                        </TouchableOpacity>
-                    )}
-                    <Text style={styles.label}>is your recommended daily amount.</Text>
-
-                    <View style={styles.bottomRow}>
-                        <TouchableOpacity onPress={() => {
-                            setIsEditing(true);
-                            setTimeout(() => {
-                                inputRef.current?.focus();
-                            }, 50);
-                            }}
-                        >
-                            <Text style={styles.changeText}>Change</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={handleConfirm} style={styles.goButton}>
-                            <Text style={styles.goText}>Let's Go!</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-        </Modal>
-    );
+                          }}
+                      >
+                          <Text style={styles.changeText}>Change</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={handleConfirm} style={styles.goButton}>
+                          <Text style={styles.goText}>Let's Go!</Text>
+                      </TouchableOpacity>
+                  </View>
+              </View>
+          </View>
+      </Modal>
+  );
 }
 
 const styles = StyleSheet.create({
