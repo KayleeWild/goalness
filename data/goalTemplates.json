@@ -3,7 +3,11 @@
         "id": "1",
         "title": "Water",
         "description": "Our bodies are 50-70% water! That makes it a macronutrient (a substance we need to consume a lot of). Drinking enough water consistently will help your heart and bloodflow, help your kidneys remove waste, improve mental/emotional health, increase althletic performance, and a slew of other benefits. You'll definitely want water in your toolbelt for your wellness quest!",
-        "image": "waterBackground.png",
+        "images": {
+            "card": "waterCard",
+            "dull": "waterDull",
+            "color": "waterColor"
+        },
         "increment": 8,
         "suggestedAmount": 100,
         "unit": "oz"
@@ -12,9 +16,50 @@
         "id": "2",
         "title": "Sleep",
         "description": "COMING SOON",
-        "image": "sleepBackground.png",
+        "images": {
+            "card": "sleepCard",
+            "dull": "sleepDull",
+            "color": "sleepColor"
+        },
         "increment": 1,
         "suggestedAmount": 8,
         "unit": "hr"
+    },
+    {
+        "id": "3",
+        "title": "Screen Time",
+        "description": "You don't need more than 2 hours max -Lil Keevs",
+        "images": {
+            "card": "techCard",
+            "dull": "techDull",
+            "color": "techColor"
+        },
+        "increment": 1,
+        "suggestedAmount": 2,
+        "unit": "hr"
+    },
+    {
+        "id": "4",
+        "title": "Protein",
+        "description": "Gotta get those gainz",
+        "images": {
+            "card": "proteinCard",
+            "dull": "proteinDull",
+            "color": "proteinColor"
+        },
+        "increment": 10,
+        "suggestedAmount": 100,
+        "unit": "g"
+    },
+    {
+        "id": "5",
+        "title": "Custom",
+        "description": "Write a description for your goal below...",
+        "images": {
+            "card": "customCard",
+            "dull": "customDull",
+            "color": "customColor"
+        },
+        "suggestedAmount": 0
     }
 ]

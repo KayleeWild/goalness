@@ -5,14 +5,15 @@ import goalTemplates from "@/data/goalTemplates.json";
 import GoalCard from "@/components/GoalCard";
 import GoalModal from "@/components/GoalModal";
 import { useGoalContext } from "@/context/GoalContext";
+import imageMap from "@/assets/images/imageMap";
 
 
 // Dynamically import images
 // ⚠️ Make sure to update this when adding new images!! ➡️ "filename.png": require('path/to/image/filename.png'),
-const imageMap: { [key: string]: any } = {
-  "waterBackground.png": require("@/assets/images/waterBackground.png"),
-  "sleepBackground.png": require("@/assets/images/sleepBackground.png"),
-};
+// const imageMap: { [key: string]: any } = {
+//   "waterBackground.png": require("@/assets/images/waterBackground.png"),
+//   "sleepBackground.png": require("@/assets/images/sleepBackground.png"),
+// };
 
 export default function ExploreScreen() {
   const [selectedGoal, setSelectedGoal] = useState<null | typeof goalTemplates[0]>(null);
@@ -26,7 +27,7 @@ export default function ExploreScreen() {
                 key={goal.id}
                 title={goal.title}
                 description={goal.description}
-                backgroundImage={imageMap[goal.image]}
+                backgroundImage={imageMap[goal.images.card]}
                 onPress={() => setSelectedGoal(goal)}
                 />
             ))}
@@ -40,7 +41,13 @@ export default function ExploreScreen() {
                 suggested={selectedGoal.suggestedAmount}
                 unit={selectedGoal.unit}
                 onAdd={(intakeAmount) => {
-                  addGoal({ amount: intakeAmount, title: selectedGoal.title, increment: selectedGoal.increment});
+                  addGoal({ 
+                    amount: intakeAmount, 
+                    title: selectedGoal.title, 
+                    increment: selectedGoal.increment,
+                    trackedAmount: 0,
+                    dullImage: imageMap[selectedGoal.images.dull],
+                    colorImage: imageMap[selectedGoal.images.color]});
                   setSelectedGoal(null);
                   router.push('/');
                   console.log(`Added goal: ${selectedGoal.title}`);
