@@ -1,17 +1,21 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import { Alert } from 'react-native';
+import { Alert, ImageSourcePropType } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Goal = {
     amount: number;
     title: string;
     increment: number;
+    trackedAmount: number;
+    dullImage: ImageSourcePropType;
+    colorImage: ImageSourcePropType;
 };
 
 type GoalContextType = {
     goals: Goal[];
     addGoal: (goal: Goal) => void;
     removeGoal: (indexToRemove: number) => void;
+    updateTrackedAmount: (indexToUpdate: number, newAmount: number) => void;
 };
 
 const GoalContext = createContext<GoalContextType | undefined>(undefined);
@@ -65,9 +69,19 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
             }
         ]);
     };
+    const updateTrackedAmount = (indexToUpdate: number, newAmount: number) => {
+        setGoals(prevGoals => {
+            const updatedGoals = [...prevGoals];
+            updatedGoals[indexToUpdate] = {
+                ...updatedGoals[indexToUpdate],
+                trackedAmount: newAmount,
+            };
+            return updatedGoals;
+        });
+    };
 
     return (
-        <GoalContext.Provider value={{ goals, addGoal, removeGoal }}>
+        <GoalContext.Provider value={{ goals, addGoal, removeGoal, updateTrackedAmount }}>
             {children}
         </GoalContext.Provider>
     );
