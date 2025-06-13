@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Text, View, StyleSheet, Alert, Pressable } from "react-native";
+import { Text, View, StyleSheet, Alert, Pressable, Image } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { SwipeListView } from 'react-native-swipe-list-view';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
@@ -27,7 +27,10 @@ export default function Index() {
         elements.push(
           <View key={i} style={styles.goalRow}>
             <View style={{ flex: 1 }}>
-              <GoalSummary amount={goals[i].amount} title={goals[i].title} increment={goals[i].increment} />
+              <GoalSummary 
+                index={i}
+                goal={goals[i]}
+              />
             </View>
             {editMode && (
               <Pressable onPress={() => [removeGoal(i), setEditMode(false)]} style={styles.trashButton}>

@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text, TouchableOpacity, ImageSourcePropType, ScrollView, Pressable } from "react-native";
 import { ImageBackground } from "expo-image";
 
+
 type Props = {
     // key: string,
     title: string;

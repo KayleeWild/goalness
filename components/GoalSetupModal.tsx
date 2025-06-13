@@ -11,7 +11,6 @@ type Props = {
 
 export default function GoalSetupModal({visible, suggested, unit, onClose, onConfirm}: Props) {
   // States:
-  const [intakeAmount, setIntakeAmount] = useState(100); //in terms of oz. Update later with tailored value based on weight/gender 
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(String(suggested));
 
