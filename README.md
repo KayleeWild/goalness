@@ -57,20 +57,27 @@ Goalness is a React Native app built with Expo and TypeScript that helps users s
 
 1. Add a new `.png` file to `assets/images/`.
 
-2. Open `imageMap` (in `app/(tabs)/explore.tsx`), and register the image:
+2. Open `imageMap` (in `assets/images`), and register the image:
 
    ```ts
-   "newGoalBackground.png": require('@/assets/images/newGoalBackground.png')
+   "newGoalCard": require('@/assets/images/newGoalCard.png')
    ```
 
 3. Inside the JSON file (in `data/goalTemplates.json`), add a new entry:
 
    ```json
    {
-     "id": "new goal",
-     "title": "New Goal",
+     "id": 0, // must be unique number
+     "title": "New Goal", // goal's title
      "description": "Why this goal is important...",
-     "backgroundImage": "newGoalBackground.png"
+     "images": { // replace [title] with the title
+         "card": "[title]Card",
+         "dull": "[title]Dull",
+         "color": "[title]Color"
+      },
+      "increment": 0, // how much it changes by when you press +/- buttons
+      "suggestedAmount": 0, // default goal #
+      "unit": "g" // could be oz, hrs, etc.
    }
    ```
 
