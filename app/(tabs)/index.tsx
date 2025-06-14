@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Alert, Pressable, Dimensions } from "react-nati
 import { router, useLocalSearchParams } from "expo-router";
 import { SwipeListView } from 'react-native-swipe-list-view';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useFocusEffect } from "@react-navigation/native";
 import ConfettiCannon from 'react-native-confetti-cannon';
 import AddGoal from "@/components/AddGoal";
@@ -21,7 +22,7 @@ export default function Index() {
   const [editMode, setEditMode] =useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const { goalAmount, goalTitle, refresh } = useLocalSearchParams();
-  const { goals, removeGoal } = useGoalContext();
+  const { goals, removeGoal, streak } = useGoalContext();
 
   const renderGoals = () => {
     const elements = [];
@@ -83,9 +84,13 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => setEditMode(!editMode)}>
-        <Text style={styles.thisWeek}>   this week   <SimpleLineIcons name="pencil" size={FONT_SIZE}/></Text>
-      </Pressable>
+      <View style={styles.thisWeek}>
+        <Text style={styles.thisWeekText}><FontAwesome5 name="fire-alt" style={styles.thisWeekText}/> {streak}</Text>
+        <Text style={styles.thisWeekText}>Today's Goals</Text>
+        <Pressable onPress={() => setEditMode(!editMode)}>
+          <SimpleLineIcons name="pencil" style={styles.thisWeekText}/>
+        </Pressable>
+      </View>
       <View style={styles.goalsContainer}>
         {renderGoals()}
       </View>
@@ -117,13 +122,17 @@ const styles = StyleSheet.create({
   },
   thisWeek: {
     marginTop: 0,
-    padding: 10,
-    textAlign: 'center',
-    fontSize: FONT_SIZE,
-    color: '#fdfdfd',
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     backgroundColor: '#B37EAC',
+  },
+  thisWeekText: {
+    fontSize: FONT_SIZE,
+    color: '#fdfdfd',
   },
   goalRow: {
     flexDirection: 'row',
