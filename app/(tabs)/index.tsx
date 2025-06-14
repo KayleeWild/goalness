@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { Text, View, StyleSheet, Alert, Pressable, Image } from "react-native";
+import { Text, View, StyleSheet, Alert, Pressable, Dimensions } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { SwipeListView } from 'react-native-swipe-list-view';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import { useFocusEffect } from "@react-navigation/native";
+import ConfettiCannon from 'react-native-confetti-cannon';
 import AddGoal from "@/components/AddGoal";
 import GoalSummary from "@/components/GoalSummary";
 import { useGoalContext } from "@/context/GoalContext";
@@ -11,11 +12,14 @@ import { useGoalContext } from "@/context/GoalContext";
 
 // constants
 const FONT_SIZE = 22
+const { width, height } = Dimensions.get('window');
+
 
 
 export default function Index() {
   const [currentGoal, setCurrentGoal] = useState<{ amount: number; title: string } | null>(null); // null = not added yet
   const [editMode, setEditMode] =useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const { goalAmount, goalTitle, refresh } = useLocalSearchParams();
   const { goals, removeGoal } = useGoalContext();
 
@@ -30,6 +34,7 @@ export default function Index() {
               <GoalSummary 
                 index={i}
                 goal={goals[i]}
+                onGoalCompleted={() => setShowConfetti(true)}
               />
             </View>
             {editMode && (
@@ -84,6 +89,19 @@ export default function Index() {
       <View style={styles.goalsContainer}>
         {renderGoals()}
       </View>
+      {showConfetti && (
+                <View style={[StyleSheet.absoluteFillObject, { zIndex: 999 }]}>
+                    <ConfettiCannon
+                        count={100}
+                        origin={{ x: width / 2, y: height - 50 }}
+                        fadeOut
+                        autoStart
+                        explosionSpeed={200}
+                        fallSpeed={2000}
+                        onAnimationEnd={() => setShowConfetti(false)}
+                    />
+                </View>
+            )}
     </View>
   );
 }

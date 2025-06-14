@@ -1,5 +1,6 @@
-import { View, Text, StyleSheet, Pressable, Image, ImageSourcePropType } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ImageSourcePropType } from 'react-native';
 import { useState } from 'react';
+import * as Haptics from 'expo-haptics';
 import { useGoalContext } from '@/context/GoalContext';
 import ProgressImage from './ProgressImage';
 
@@ -12,25 +13,32 @@ type Props = {
         trackedAmount: number;
         dullImage: ImageSourcePropType;
         colorImage: ImageSourcePropType; 
-    }
+    };
+    onGoalCompleted?: () => void;
 }
 
 const COLOR = '#ababab';
 const IMAGE_HEIGHT_AND_WIDTH = 75;
 
-export default function GoalSummary({ index, goal }: Props) {
-    // const [tracked, setTracked] = useState(0); // Amount user has tracked so far
+export default function GoalSummary({ index, goal, onGoalCompleted }: Props) {
     const { updateTrackedAmount } = useGoalContext();
     const progress = Math.min(goal.trackedAmount / goal.amount, 1);
 
     const handleIncrement = () => {
         const newAmount = goal.trackedAmount + goal.increment;
         updateTrackedAmount(index, newAmount);
+        Haptics.selectionAsync();
+
+        if (newAmount >= goal.amount && goal.trackedAmount < goal.amount) {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            onGoalCompleted?.();
+        }
     };
 
     const handleDecrement = () => {
         const newAmount = Math.max(goal.trackedAmount - goal.increment, 0);
         updateTrackedAmount(index, newAmount);
+        Haptics.selectionAsync();
     };
     
     return (
