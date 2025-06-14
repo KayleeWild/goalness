@@ -37,7 +37,7 @@ Goalness is a React Native app built with Expo and TypeScript that helps users s
    ```bash
    npx expo start
    ```
-   - I recommend installing the Expo Go app on your mobile device for testing. It's free on the app/play stores
+   - I recommend installing the Expo Go app on your mobile device for testing. It's free on the app/play stores. I also recommend installing the Expo Tools extension if using Visual Studio Code.
 
 ---
 
