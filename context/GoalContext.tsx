@@ -28,34 +28,10 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     const [ streak, setStreak ] = useState(0);
     const [ didCompleteToday, setDidCompleteToday ] = useState(false);
     const [ lastCheckDate, setLastCheckDate ] = useState('');
+    const getToday = () => new Date().toISOString().split('T')[0];
 
     // ⬇ AsyncStorage functions:
-    // useEffect(() => {
-    //     const loadGoals = async () => {
-    //         try {
-    //             const json = await AsyncStorage.getItem('userGoals');
-    //             if (json) {
-    //                 const savedGoals = JSON.parse(json);
-    //                 setGoals(savedGoals);
-    //             }
-    //         } catch (e) {
-    //             console.error('Failed to load goals', e);
-    //         }
-    //     };
-
-    //     loadGoals();
-    // }, []);
-    // useEffect(() => {
-    //     const saveGoals = async () => {
-    //         try {
-    //             await AsyncStorage.setItem('userGoals', JSON.stringify(goals));
-    //         } catch (e) {
-    //             console.error('Failed to save goals', e);
-    //         }
-    //     };
-
-    //     saveGoals();
-    // }, [goals]);
+    // Load app data (streak and goals)
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -66,17 +42,50 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
                     AsyncStorage.getItem('lastCheckDate')
                 ]);
 
-                if (goalsJson) setGoals(JSON.parse(goalsJson));
-                if (streakJson) setStreak(Number(streakJson));
-                if (completeJson) setDidCompleteToday(completeJson === 'true');
-                if (dateJson) setLastCheckDate(dateJson);
+                const today = getToday();
+                let savedDate = dateJson || '';
+                const isNewDay = savedDate !== today;
+
+                let loadedGoals: Goal[] = goalsJson ? JSON.parse(goalsJson) : [];
+                let loadedStreak = streakJson ? Number(streakJson) : 0;
+                let loadedComplete = completeJson === 'true';
+
+                if (isNewDay) {
+                    if (loadedComplete) {
+                        loadedStreak += 1;
+                    } else {
+                        loadedStreak = 0;
+                    }
+                    loadedComplete = false;
+                    savedDate = today;
+
+                    loadedGoals = loadedGoals.map((goal: Goal) => ({
+                        ...goal,
+                        trackedAmount: 0
+                    }));
+
+                    await Promise.all([
+                        AsyncStorage.setItem('userGoals', JSON.stringify(loadedGoals)),
+                        AsyncStorage.setItem('userStreak', loadedStreak.toString()),
+                        AsyncStorage.setItem('didCompleteToday', 'false'),
+                        AsyncStorage.setItem('lastCheckDate', today),
+                    ]);
+                }
+
+                setGoals(loadedGoals);
+                setStreak(loadedStreak);
+                setDidCompleteToday(loadedComplete);
+                setLastCheckDate(savedDate);
+
             } catch (e) {
-                console.error('Failed to load streak data', e);
+                console.error('Failed to load or initialize streak data', e);
             }
         };
 
         loadData();
     }, []);
+
+    // Save goals whenever they change
     useEffect(() => {
         AsyncStorage.setItem('userGoals', JSON.stringify(goals));
     }, [goals]);
@@ -92,32 +101,6 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         AsyncStorage.setItem('lastCheckDate', lastCheckDate);
     }, [lastCheckDate]);
-    useEffect(() => {
-        const checkAndResetStreak = () => {
-            const today = new Date().toISOString().split('T')[0];
-
-            if (lastCheckDate !== today) {
-                if (didCompleteToday) {
-                    setStreak(prev => prev + 1);
-                } else {
-                    setStreak(0);
-                }
-
-                // Reset tracked amounts
-                setGoals(prev =>
-                    prev.map(goal => ({
-                        ...goal,
-                        trackedAmount: 0
-                    }))
-                );
-
-                setDidCompleteToday(false);
-                setLastCheckDate(today);
-            }
-        }
-    }, [lastCheckDate, didCompleteToday]);
-
-
 
 
     // ⬇ Goal manipulation functions:
@@ -142,14 +125,13 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
             const updatedGoals = [...prevGoals];
             const goal = updatedGoals[indexToUpdate];
 
-            if (newAmount >= goal.amount && goal.trackedAmount < goal.amount && !didCompleteToday) {
-                setDidCompleteToday(true);
-            }
-
             updatedGoals[indexToUpdate] = {
                 ...goal,
                 trackedAmount: newAmount,
             };
+            // only update streak if goal stays completed
+            const anyCompleted = updatedGoals.some(g => g.trackedAmount >= g.amount);
+            setDidCompleteToday(anyCompleted);
             return updatedGoals;
         });
     };
