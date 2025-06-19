@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, ImageSourcePropType } from 'react-native';
+import { Alert, View, Text, StyleSheet, Pressable, ImageSourcePropType } from 'react-native';
 import { useState } from 'react';
 import * as Haptics from 'expo-haptics';
 import { useGoalContext } from '@/context/GoalContext';
@@ -10,6 +10,7 @@ type Props = {
         amount: number; // Goal amount to track (ie. 100 oz, 8 hrs, etc.)
         title: string; // Selected goal's title
         increment: number;
+        unit: string;
         trackedAmount: number;
         dullImage: ImageSourcePropType;
         colorImage: ImageSourcePropType; 
@@ -25,14 +26,26 @@ export default function GoalSummary({ index, goal, onGoalCompleted }: Props) {
     const progress = Math.min(goal.trackedAmount / goal.amount, 1);
 
     const handleIncrement = () => {
-        const newAmount = goal.trackedAmount + goal.increment;
-        updateTrackedAmount(index, newAmount);
-        Haptics.selectionAsync();
+        let newAmount = goal.trackedAmount + goal.increment;
 
         if (newAmount >= goal.amount && goal.trackedAmount < goal.amount) {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            onGoalCompleted?.();
+            Alert.alert("Are you sure you want to complete this goal?", "", 
+                [{
+                    text: "Complete",
+                    onPress: () => {
+                        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                        onGoalCompleted?.(); // tells index page to trigger confetti
+                    }
+                },{
+                    text: "Cancel",
+                    style: 'cancel',
+                    onPress: () => {newAmount = newAmount - goal.increment, updateTrackedAmount(index, newAmount);}
+                }
+            ])
+            
         }
+        updateTrackedAmount(index, newAmount);
+        Haptics.selectionAsync();
     };
 
     const handleDecrement = () => {
@@ -41,23 +54,64 @@ export default function GoalSummary({ index, goal, onGoalCompleted }: Props) {
         Haptics.selectionAsync();
     };
     
+    const renderSummary = () => {
+        const elements = [];
+        const isComplete = goal.trackedAmount >= goal.amount;
+
+        if (isComplete) {
+            elements.push(
+                <View style={styles.container}>
+                    <ProgressImage
+                        dullImage={goal.dullImage}
+                        colorImage={goal.colorImage}
+                        progress={progress}
+                        imageHeightAndWidth={IMAGE_HEIGHT_AND_WIDTH}
+                    />
+                    {/* <Text style={styles.amount}>Completed!</Text> */}
+                    <Text style={styles.amount}>{goal.trackedAmount}/{goal.amount} {goal.unit}</Text>
+                </View>
+            )
+        } else {
+            elements.push(
+                <View style={styles.container}>
+                    <ProgressImage
+                        dullImage={goal.dullImage}
+                        colorImage={goal.colorImage}
+                        progress={progress}
+                        imageHeightAndWidth={IMAGE_HEIGHT_AND_WIDTH}
+                    />
+                    <Text style={styles.amount}>{goal.trackedAmount}/{goal.amount} {goal.unit}</Text>
+                    <Pressable onPress={handleDecrement}>
+                        <Text style={styles.track}>-</Text>
+                    </Pressable>
+                    <Pressable onPress={handleIncrement}>
+                        <Text style={styles.track}>+</Text>
+                    </Pressable>
+                </View>
+            )
+        }
+        return elements;
+    }
+
     return (
-        <View style={styles.container}>
-            {/* <Image source={goal.dullImage} style={styles.image}></Image> */}
-            <ProgressImage
-                dullImage={goal.dullImage}
-                colorImage={goal.colorImage}
-                progress={progress}
-                imageHeightAndWidth={IMAGE_HEIGHT_AND_WIDTH}
-            />
-            <Text style={styles.amount}>{goal.trackedAmount}/{goal.amount}</Text>
-            <Pressable onPress={handleDecrement}>
-                <Text style={styles.track}>-</Text>
-            </Pressable>
-            <Pressable onPress={handleIncrement}>
-                <Text style={styles.track}>+</Text>
-            </Pressable>
-        </View>
+        // <View style={styles.container}>
+        //     <ProgressImage
+        //         dullImage={goal.dullImage}
+        //         colorImage={goal.colorImage}
+        //         progress={progress}
+        //         imageHeightAndWidth={IMAGE_HEIGHT_AND_WIDTH}
+        //     />
+        //     <Text style={styles.amount}>{goal.trackedAmount}/{goal.amount}</Text>
+        //     <Pressable onPress={handleDecrement}>
+        //         <Text style={styles.track}>-</Text>
+        //     </Pressable>
+        //     <Pressable onPress={handleIncrement}>
+        //         <Text style={styles.track}>+</Text>
+        //     </Pressable>
+        // </View>
+        <>
+            {renderSummary()}
+        </>
     );
 }
 
@@ -66,7 +120,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#e8e8e8',
         margin: 10,
         paddingVertical: 20,
-        paddingHorizontal: 40,
+        paddingHorizontal: 20,
         borderRadius: 10,
         alignItems: 'center',
         flexDirection: "row",

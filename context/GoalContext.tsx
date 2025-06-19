@@ -6,6 +6,7 @@ type Goal = {
     amount: number;
     title: string;
     increment: number;
+    unit: string;
     trackedAmount: number;
     dullImage: ImageSourcePropType;
     colorImage: ImageSourcePropType;

@@ -45,6 +45,7 @@ export default function ExploreScreen() {
                     amount: intakeAmount, 
                     title: selectedGoal.title, 
                     increment: selectedGoal.increment,
+                    unit: selectedGoal.unit,
                     trackedAmount: 0,
                     dullImage: imageMap[selectedGoal.images.dull],
                     colorImage: imageMap[selectedGoal.images.color]});
