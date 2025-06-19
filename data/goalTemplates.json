@@ -27,16 +27,16 @@
     },
     {
         "id": "3",
-        "title": "Screen Time",
-        "description": "You don't need more than 2 hours max -Lil Keevs",
+        "title": "Screen-Free Time",
+        "description": "You should strive to get between 2-5 hours of free time per day, but screens shouldn't consume more than 2 of those hours. Making time for screen-free leisure will help you reduce stress, sleep better, improve relationships, and even improve your mood. You can include meal times in this count, or morning/nightly routines. The idea is for you to be more intentional about how you spend your free time, and create space for more than just screen time.",
         "images": {
             "card": "techCard",
             "dull": "techDull",
             "color": "techColor"
         },
-        "increment": 1,
-        "suggestedAmount": 2,
-        "unit": "hr"
+        "increment": 10,
+        "suggestedAmount": 30,
+        "unit": "min"
     },
     {
         "id": "4",
