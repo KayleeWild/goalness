@@ -61,8 +61,7 @@ export default function Index() {
               if (goals.length >= 3) {
                 Alert.alert("Limit Reached", "You can only have up to 3 goals at a time.");
               } else {
-                setShowStreakModal(true) // testing only
-                // router.push('/explore');
+                router.push('/explore');
               }
             }}
           />
