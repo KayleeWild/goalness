@@ -1,39 +1,35 @@
-import { Video, ResizeMode } from "expo-av";
 import { View, StyleSheet } from "react-native";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import { useVideoPlayer, VideoView } from 'expo-video';
 
 type Props = {
     onFinish: () => void;
 };
 
 export default function VideoSplashScreen({ onFinish }: Props) {
-    const videoRef = useRef<Video>(null);
+    const videoSource = require('@/assets/videos/splash-icon.mp4');
+    const player = useVideoPlayer(videoSource, (p) => {
+        p.play();
+        p.loop = false;
+    });
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            onFinish();
-        }, 3000);
-
-        return () => clearTimeout(timeout);
+        const timeout = setTimeout( onFinish, 3000);
+        return () => {
+            clearTimeout(timeout);
+            // player?.pause();
+        };
     }, []);
 
     return (
         <View style={styles.container}>
-            <Video
-                ref={videoRef}
-                source={require('@/assets/videos/splash-icon.mp4')}
-                resizeMode={ResizeMode.CONTAIN}
-                isLooping={false}
-                shouldPlay
+            <VideoView
                 style={styles.video}
-                onPlaybackStatusUpdate={(status) => {
-                    if (status.isLoaded && status.didJustFinish) {
-                        onFinish();
-                    } 
-                }}
+                player={player}
+                allowsPictureInPicture={false}
             />
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
