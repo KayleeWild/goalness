@@ -62,7 +62,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
 
                 if (isNewDay) {
                     if (loadedComplete) {
-                        loadedStreak += 1;
+                        loadedStreak = loadedStreak;
                     } else {
                         loadedStreak = 0;
                     }
