@@ -19,6 +19,8 @@ type GoalContextType = {
     updateTrackedAmount: (indexToUpdate: number, newAmount: number) => void;
     streak: number;
     didCompleteToday: boolean;
+    completeGoalToday: (index: number) => void;
+    completedIndexesToday: number[];
 };
 
 const GoalContext = createContext<GoalContextType | undefined>(undefined);
@@ -29,6 +31,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     const [ streak, setStreak ] = useState(0);
     const [ didCompleteToday, setDidCompleteToday ] = useState(false);
     const [ lastCheckDate, setLastCheckDate ] = useState('');
+    const [completedIndexesToday, setCompletedIndexesToday] = useState<number[]>([]);
     const getToday = () => new Date().toISOString().split('T')[0];
 
     // ⬇ AsyncStorage functions:
@@ -103,6 +106,31 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
         AsyncStorage.setItem('lastCheckDate', lastCheckDate);
     }, [lastCheckDate]);
 
+    // new one 🤨
+    const recalculateTodayStatus = (updatedGoals: Goal[]) => {
+        const anyCompleted = updatedGoals.some(g => g.trackedAmount >= g.amount);
+        setDidCompleteToday(anyCompleted);
+        if (!anyCompleted) {
+            setStreak(s => s - 1);
+            setCompletedIndexesToday([]);
+        }
+        return anyCompleted;
+    };
+
+    // complete goal and increment streak
+    const completeGoalToday = (index: number) => {
+        setCompletedIndexesToday(prev => {
+            if (!prev.includes(index)) {
+                const updated = [...prev, index];
+                if (!didCompleteToday) {
+                    setStreak(s => s + 1);
+                    setDidCompleteToday(true);
+                }
+                return updated;
+            }
+            return prev;
+        });
+    };
 
     // ⬇ Goal manipulation functions:
     const addGoal = (goal: Goal) => {
@@ -113,7 +141,19 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
             [
             {
                 text: 'Delete Goal',
-                onPress: () => setGoals(prev => prev.filter((_, index) => index !== indexToRemove)),
+                onPress: () => {
+                    setGoals(prev => {
+                        const updated = prev.filter((_, index) => index !== indexToRemove);
+                        const stillCompleted = recalculateTodayStatus(updated);
+                        if (!stillCompleted) {
+                            AsyncStorage.setItem('didCompleteToday', 'false');
+                            AsyncStorage.setItem('userStreak', '0');
+                        }
+                        return updated;
+                    });
+
+                    setCompletedIndexesToday(prev => prev.filter(i => i !== indexToRemove));
+                },
             },
             {
                 text: 'Cancel',
@@ -139,7 +179,10 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
 
 
     return (
-        <GoalContext.Provider value={{ goals, addGoal, removeGoal, updateTrackedAmount, streak, didCompleteToday }}>
+        <GoalContext.Provider value={{ 
+            goals, addGoal, removeGoal, updateTrackedAmount, 
+            streak, didCompleteToday,
+            completeGoalToday, completedIndexesToday }}>
             {children}
         </GoalContext.Provider>
     );

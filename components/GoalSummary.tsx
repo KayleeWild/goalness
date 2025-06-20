@@ -23,29 +23,35 @@ const IMAGE_HEIGHT_AND_WIDTH = 75;
 
 export default function GoalSummary({ index, goal, onGoalCompleted }: Props) {
     const { updateTrackedAmount } = useGoalContext();
+    const { completeGoalToday, completedIndexesToday } = useGoalContext();
+    const isCompleteToday = completedIndexesToday.includes(index);
+
     const progress = Math.min(goal.trackedAmount / goal.amount, 1);
 
     const handleIncrement = () => {
         let newAmount = goal.trackedAmount + goal.increment;
 
-        if (newAmount >= goal.amount && goal.trackedAmount < goal.amount) {
+        if (newAmount >= goal.amount && !isCompleteToday) {
             Alert.alert("Are you sure you want to complete this goal?", "", 
                 [{
                     text: "Complete",
                     onPress: () => {
-                        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                        updateTrackedAmount(index, newAmount);
+                        completeGoalToday(index)
                         onGoalCompleted?.(); // tells index page to trigger confetti
+                        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
                     }
-                },{
+                },
+                {
                     text: "Cancel",
                     style: 'cancel',
-                    onPress: () => {newAmount = newAmount - goal.increment, updateTrackedAmount(index, newAmount);}
+                    // onPress: () => {newAmount = newAmount - goal.increment, updateTrackedAmount(index, newAmount);}
                 }
-            ])
-            
-        }
-        updateTrackedAmount(index, newAmount);
-        Haptics.selectionAsync();
+            ]);
+        } else {
+            updateTrackedAmount(index, newAmount);
+            Haptics.selectionAsync();
+        }    
     };
 
     const handleDecrement = () => {
@@ -55,10 +61,10 @@ export default function GoalSummary({ index, goal, onGoalCompleted }: Props) {
     };
     
     const renderSummary = () => {
+        const isComplete = isCompleteToday || goal.trackedAmount >= goal.amount;
         const elements = [];
-        const isComplete = goal.trackedAmount >= goal.amount;
 
-        if (isComplete) {
+        {if (isComplete) {
             elements.push(
                 <View style={styles.container}>
                     <ProgressImage
@@ -90,7 +96,7 @@ export default function GoalSummary({ index, goal, onGoalCompleted }: Props) {
                 </View>
             )
         }
-        return elements;
+        return elements;}
     }
 
     return (
