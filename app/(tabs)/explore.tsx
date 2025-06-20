@@ -36,23 +36,23 @@ export default function ExploreScreen() {
         {selectedGoal && (
             <GoalModal
                 visible={!!selectedGoal}
-                title={selectedGoal.title}
-                description={selectedGoal.description}
-                suggested={selectedGoal.suggestedAmount}
-                unit={selectedGoal.unit}
-                onAdd={(intakeAmount) => {
-                  addGoal({ 
-                    amount: intakeAmount, 
-                    title: selectedGoal.title, 
-                    increment: selectedGoal.increment,
-                    unit: selectedGoal.unit,
-                    trackedAmount: 0,
-                    dullImage: imageMap[selectedGoal.images.dull],
+              title={selectedGoal.title}
+              description={selectedGoal.description}
+              suggested={selectedGoal.suggestedAmount}
+              unit={selectedGoal.unit}
+              onAdd={(intakeAmount) => {
+                addGoal({ 
+                  amount: intakeAmount, 
+                  title: selectedGoal.title, 
+                  increment: selectedGoal.increment,
+                  unit: selectedGoal.unit,
+                  trackedAmount: 0,
+                  dullImage: imageMap[selectedGoal.images.dull],
                     colorImage: imageMap[selectedGoal.images.color]});
-                  setSelectedGoal(null);
+                setSelectedGoal(null);
                   router.push('/');
                   console.log(`Added goal: ${selectedGoal.title}`);
-                }}
+              }}
                 onClose={() => setSelectedGoal(null)}
             />
         )}

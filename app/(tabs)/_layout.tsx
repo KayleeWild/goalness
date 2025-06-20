@@ -4,7 +4,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 export default function TabsLayout() {
   return (
   <Tabs
+    detachInactiveScreens={true}
     screenOptions={{
+        lazy: true,
         headerStyle: {
         backgroundColor: '#B37EAC',
         },
