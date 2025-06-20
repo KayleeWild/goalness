@@ -50,6 +50,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
                     AsyncStorage.getItem('hasShownStreakToday'),
                 ]);
 
+                // AsyncStorage.setItem('userStreak', '0') // Toggle if you need to reset streak for testing
                 const today = getToday();
                 let savedDate = dateJson || '';
                 const isNewDay = savedDate !== today;
@@ -123,11 +124,19 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     // new one 🤨
     const recalculateTodayStatus = (updatedGoals: Goal[]) => {
         const anyCompleted = updatedGoals.some(g => g.trackedAmount >= g.amount);
-        setDidCompleteToday(anyCompleted);
+        
         if (!anyCompleted) {
+            setDidCompleteToday(false);
             setStreak(s => s - 1);
             setCompletedIndexesToday([]);
+            AsyncStorage.setItem('didCompleteToday', 'false');
+            AsyncStorage.setItem('userStreak', streak.toString());
+            AsyncStorage.setItem('hasShownStreakToday', 'false');
+            setHasShownStreakToday(false);
+        } else {
+            setDidCompleteToday(true); 
         }
+
         return anyCompleted;
     };
 
@@ -158,13 +167,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
                 onPress: () => {
                     setGoals(prev => {
                         const updated = prev.filter((_, index) => index !== indexToRemove);
-                        const stillCompleted = recalculateTodayStatus(updated);
-                        if (!stillCompleted) {
-                            AsyncStorage.setItem('didCompleteToday', 'false');
-                            AsyncStorage.setItem('userStreak', '0');
-                            AsyncStorage.setItem('hasShownStreakToday', 'false');
-                            setHasShownStreakToday(false);
-                        }
+                        recalculateTodayStatus(updated);
                         return updated;
                     });
 
