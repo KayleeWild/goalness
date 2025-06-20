@@ -21,6 +21,8 @@ type GoalContextType = {
     didCompleteToday: boolean;
     completeGoalToday: (index: number) => void;
     completedIndexesToday: number[];
+    hasShownStreakToday: boolean;
+    setHasShownStreakToday: (val: boolean) => void;
 };
 
 const GoalContext = createContext<GoalContextType | undefined>(undefined);
@@ -32,6 +34,7 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     const [ didCompleteToday, setDidCompleteToday ] = useState(false);
     const [ lastCheckDate, setLastCheckDate ] = useState('');
     const [completedIndexesToday, setCompletedIndexesToday] = useState<number[]>([]);
+    const [hasShownStreakToday, setHasShownStreakToday] = useState(false);
     const getToday = () => new Date().toISOString().split('T')[0];
 
     // ⬇ AsyncStorage functions:
@@ -39,11 +42,12 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const [goalsJson, streakJson, completeJson, dateJson] = await Promise.all([
+                const [goalsJson, streakJson, completeJson, dateJson, shownStreakJson] = await Promise.all([
                     AsyncStorage.getItem('userGoals'),
                     AsyncStorage.getItem('userStreak'),
                     AsyncStorage.getItem('didCompleteToday'),
-                    AsyncStorage.getItem('lastCheckDate')
+                    AsyncStorage.getItem('lastCheckDate'),
+                    AsyncStorage.getItem('hasShownStreakToday'),
                 ]);
 
                 const today = getToday();
@@ -53,6 +57,8 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
                 let loadedGoals: Goal[] = goalsJson ? JSON.parse(goalsJson) : [];
                 let loadedStreak = streakJson ? Number(streakJson) : 0;
                 let loadedComplete = completeJson === 'true';
+                const loadedHasShown = shownStreakJson === 'true';
+                setHasShownStreakToday(loadedHasShown)
 
                 if (isNewDay) {
                     if (loadedComplete) {
@@ -73,7 +79,10 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
                         AsyncStorage.setItem('userStreak', loadedStreak.toString()),
                         AsyncStorage.setItem('didCompleteToday', 'false'),
                         AsyncStorage.setItem('lastCheckDate', today),
+                        AsyncStorage.setItem('hasShownStreakToday', 'false'),
                     ]);
+
+                    setHasShownStreakToday(false);
                 }
 
                 setGoals(loadedGoals);
@@ -105,6 +114,11 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         AsyncStorage.setItem('lastCheckDate', lastCheckDate);
     }, [lastCheckDate]);
+
+    useEffect(() => {
+        AsyncStorage.setItem('hasShownStreakToday', hasShownStreakToday.toString());
+    }, [hasShownStreakToday]);
+
 
     // new one 🤨
     const recalculateTodayStatus = (updatedGoals: Goal[]) => {
@@ -148,6 +162,8 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
                         if (!stillCompleted) {
                             AsyncStorage.setItem('didCompleteToday', 'false');
                             AsyncStorage.setItem('userStreak', '0');
+                            AsyncStorage.setItem('hasShownStreakToday', 'false');
+                            setHasShownStreakToday(false);
                         }
                         return updated;
                     });
@@ -182,7 +198,8 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
         <GoalContext.Provider value={{ 
             goals, addGoal, removeGoal, updateTrackedAmount, 
             streak, didCompleteToday,
-            completeGoalToday, completedIndexesToday }}>
+            completeGoalToday, completedIndexesToday,
+            hasShownStreakToday, setHasShownStreakToday }}>
             {children}
         </GoalContext.Provider>
     );

@@ -21,10 +21,11 @@ export default function Index() {
   const [editMode, setEditMode] =useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showStreakModal, setShowStreakModal] = useState(false);
-  const [hasShownStreakToday, setHasShownStreakToday] = useState(false);
+  // const [hasShownStreakToday, setHasShownStreakToday] = useState(false);
   const [showStreakInfo, setShowStreakInfo] = useState(false);
   const { goalAmount, goalTitle, refresh } = useLocalSearchParams();
   const { goals, removeGoal, streak } = useGoalContext();
+  const { hasShownStreakToday, setHasShownStreakToday } = useGoalContext();
 
   const renderGoals = () => {
     const elements = [];
