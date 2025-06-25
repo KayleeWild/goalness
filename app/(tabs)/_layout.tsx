@@ -29,8 +29,7 @@ export default function TabsLayout() {
                 color={color}
                 size={22}
             />
-        ),
-        
+        ),  
     }} />
     {/* <Tabs.Screen name="journal" /> */}
     <Tabs.Screen name="explore"

@@ -62,10 +62,9 @@ export default function GoalSummary({ index, goal, onGoalCompleted }: Props) {
     
     const renderSummary = () => {
         const isComplete = isCompleteToday || goal.trackedAmount >= goal.amount;
-        const elements = [];
 
-        {if (isComplete) {
-            elements.push(
+        if (isComplete) {
+            return (
                 <View style={styles.container}>
                     <ProgressImage
                         dullImage={goal.dullImage}
@@ -78,7 +77,7 @@ export default function GoalSummary({ index, goal, onGoalCompleted }: Props) {
                 </View>
             )
         } else {
-            elements.push(
+            return (
                 <View style={styles.container}>
                     <ProgressImage
                         dullImage={goal.dullImage}
@@ -93,11 +92,10 @@ export default function GoalSummary({ index, goal, onGoalCompleted }: Props) {
                     <Pressable onPress={handleIncrement}>
                         <Text style={styles.track}>+</Text>
                     </Pressable>
-                </View>
-            )
+                </View> 
+            );
         }
-        return elements;}
-    }
+    };
 
     return (
         // <View style={styles.container}>
