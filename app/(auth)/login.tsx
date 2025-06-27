@@ -75,7 +75,7 @@ const LoginScreen: React.FC = () => {
             onPress={handleAuthAction}
             color="#B37EAC" // Example: use your theme color
           />
-          <View style={styles.spacer} /> {/* Add some space between buttons */}
+          <View style={styles.spacer} /> 
           <Button
             title={isSigningUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
             onPress={() => setIsSigningUp(prev => !prev)} // Toggle between modes
