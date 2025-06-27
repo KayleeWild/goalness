@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
 import { Alert, ImageSourcePropType } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -36,12 +36,24 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
     const [completedIndexesToday, setCompletedIndexesToday] = useState<number[]>([]);
     const [hasShownStreakToday, setHasShownStreakToday] = useState(false);
     const getToday = () => new Date().toISOString().split('T')[0];
+    const getYesterday = useCallback(() => {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        return yesterday.toISOString().split('T')[0];
+    }, []);
 
     // ⬇ AsyncStorage functions:
     // Load app data (streak and goals)
     useEffect(() => {
         const loadData = async () => {
             try {
+                // // Temporary code for testing date:
+                // const oneWeekAgo = new Date();
+                // oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                // const lastWeekDateFormatted = oneWeekAgo.toISOString().split('T')[0];
+                // await AsyncStorage.setItem('lastCheckDate', lastWeekDateFormatted);
+                // console.log("TESTING: lastcheckdate set to one week ago: ", lastWeekDateFormatted);
+                
                 const [goalsJson, streakJson, completeJson, dateJson, shownStreakJson] = await Promise.all([
                     AsyncStorage.getItem('userGoals'),
                     AsyncStorage.getItem('userStreak'),
@@ -52,21 +64,24 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
 
                 // AsyncStorage.setItem('userStreak', '0') // Toggle if you need to reset streak for testing
                 const today = getToday();
-                let savedDate = dateJson || '';
+                const yesterday = getYesterday();
+                let savedDate = dateJson || ''; // date last checked
                 const isNewDay = savedDate !== today;
 
                 let loadedGoals: Goal[] = goalsJson ? JSON.parse(goalsJson) : [];
                 let loadedStreak = streakJson ? Number(streakJson) : 0;
-                let loadedComplete = completeJson === 'true';
+                let loadedComplete = completeJson === 'true'; // completed previous day?
                 const loadedHasShown = shownStreakJson === 'true';
                 setHasShownStreakToday(loadedHasShown)
 
                 if (isNewDay) {
-                    if (loadedComplete) {
-                        loadedStreak = loadedStreak;
-                    } else {
+                    console.log(`New day detected! Today: ${today}, Last Check: ${savedDate}`);
+                    if (!loadedComplete || savedDate < yesterday) {
+                        console.log('Previous day not completed, resetting streak to 0.');
                         loadedStreak = 0;
-                    }
+                    } else {
+                        console.log('Previous day completed, streak continues.');
+                    } 
                     loadedComplete = false;
                     savedDate = today;
 
@@ -84,6 +99,8 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
                     ]);
 
                     setHasShownStreakToday(false);
+                } else {
+                    console.log(`Still same day: ${today}`);
                 }
 
                 setGoals(loadedGoals);
@@ -195,7 +212,6 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
             return updatedGoals;
         });
     };
-
 
     return (
         <GoalContext.Provider value={{ 
