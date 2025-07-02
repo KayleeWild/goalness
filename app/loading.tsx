@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator, StyleSheet, Text } from 'react-native'; // Ensure Text is imported!
+import { View, ActivityIndicator, StyleSheet, Text } from 'react-native'; 
 
 export default function LoadingScreen() {
   return (

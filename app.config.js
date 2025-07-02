@@ -13,6 +13,8 @@ export default ({ config }) => ({
             firebaseMessagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
             firebaseAppId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
             firebaseMeasurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID,
+            "googleWebClientId": "1042001320965-s4rlbq3j1vlpihbh9uigc8r66c34a46r.apps.googleusercontent.com.apps.googleusercontent.com",
+            "facebookAppId": "24152036784432410" 
         },
         orientation: "portrait",
         icon: "./assets/images/icon.png",
@@ -49,7 +51,10 @@ export default ({ config }) => ({
                 backgroundColor: "#ffffff"
                 }
             ],
-            "expo-video"
+            "expo-video",
+            "expo-web-browser",
+            "expo-facebook"
+
         ],
 
         experiments: {
