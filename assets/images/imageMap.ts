@@ -16,9 +16,9 @@ const imageMap = {
     proteinDull: require("@/assets/images/proteinDull.png"),
     proteinColor: require("@/assets/images/proteinColor.png"),
     // Custom
-    // customCard: require("@/assets/images/customCard.png"),
-    // customDull: require("@/assets/images/customDull.png"),
-    // customColor: require("@/assets/images/customColor.png")
+    customCard: require("@/assets/images/customCard.png"),
+    customDull: require("@/assets/images/customDull.png"),
+    customColor: require("@/assets/images/customColor.png")
 };
 
 export default imageMap;

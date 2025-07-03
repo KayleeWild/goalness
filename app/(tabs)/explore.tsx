@@ -6,6 +6,7 @@ import GoalCard from "@/components/GoalCard";
 import GoalModal from "@/components/GoalModal";
 import { useGoalContext } from "@/context/GoalContext";
 import imageMap from "@/assets/images/imageMap";
+import CustomGoalModal from "@/components/CustomGoalModal";
 
 
 // Dynamically import images
@@ -32,10 +33,34 @@ export default function ExploreScreen() {
                 />
             ))}
         </View>
-
+        {selectedGoal && selectedGoal.title == "Custom" && (
+          <CustomGoalModal
+            visible={!!selectedGoal}
+            title={selectedGoal.title}
+            description={selectedGoal.description}
+            suggested={selectedGoal.suggestedAmount}
+            unit={selectedGoal.unit}
+            onAdd={(intakeAmount, customUnit) => {
+                addGoal({ 
+                  amount: intakeAmount, 
+                  title: selectedGoal.title, 
+                  increment: selectedGoal.increment,
+                  unit: customUnit,
+                  trackedAmount: 0,
+                  dullImage: imageMap[selectedGoal.images.dull],
+                    colorImage: imageMap[selectedGoal.images.color]});
+                setSelectedGoal(null);
+                  router.push('/');
+                  console.log(`Added goal: ${selectedGoal.title}`);
+              }}
+            onClose={() => setSelectedGoal(null)}
+          >
+            
+          </CustomGoalModal>
+        )}
         {selectedGoal && (
             <GoalModal
-                visible={!!selectedGoal}
+              visible={!!selectedGoal}
               title={selectedGoal.title}
               description={selectedGoal.description}
               suggested={selectedGoal.suggestedAmount}
@@ -53,7 +78,7 @@ export default function ExploreScreen() {
                   router.push('/');
                   console.log(`Added goal: ${selectedGoal.title}`);
               }}
-                onClose={() => setSelectedGoal(null)}
+              onClose={() => setSelectedGoal(null)}
             />
         )}
     </ScrollView>

@@ -15,7 +15,7 @@
     {
         "id": "2",
         "title": "Sleep",
-        "description": "COMING SOON",
+        "description": "Depending on your age, you should strive to have around 30-40% of your 24-hour days be spent sleeping.\n The NIH says \"The way you feel while you are awake depends in part on what happens while you are sleeping.\" From your immune system, to your respiratory system, and everything in between, sleep is key. It even helps with long-term memory formation and learning! \n Obstacles to sleep include screen usage within an hour of bedtime, excessive stress, eating unhealthy (particularly foods that cause acid reflux), and more.",
         "images": {
             "card": "sleepCard",
             "dull": "sleepDull",
@@ -28,7 +28,7 @@
     {
         "id": "3",
         "title": "Screen-Free Time",
-        "description": "You should strive to get between 2-5 hours of free time per day, but screens shouldn't consume more than 2 of those hours. Making time for screen-free leisure will help you reduce stress, sleep better, improve relationships, and even improve your mood. You can include meal times in this count, or morning/nightly routines. The idea is for you to be more intentional about how you spend your free time, and create space for more than just screen time.",
+        "description": "You should strive to get between 2-5 hours of free time per day, but screens shouldn't consume more than 2 of those hours. Making time for screen-free leisure will help you reduce stress, sleep better, improve relationships, and even improve your mood. \n You can include meal times in this count, or morning/nightly routines. The idea is for you to be more intentional about how you spend your free time, and create space for more than just screen time.",
         "images": {
             "card": "techCard",
             "dull": "techDull",
@@ -41,14 +41,14 @@
     {
         "id": "4",
         "title": "Protein",
-        "description": "Gotta get those gainz",
+        "description": "Protein isn't just for the gym bros. It's used in your organs, bones, skin, hair, and of course your muscles. It's also important for fueling energy and transporting blood oxygen, as well as fighting disease and for cell repair.\n Experts say you should aim for around 0.36 grams of protein per pound of body weight, or roughly 25-30g / meal. \n If you're protein deficient, you might feel weaker or more hungry, get sick more, have brittle hair/nails, or a bit of brain fog. The best protein sources are poultry, salmon and other fatty fish, nuts/seeds, beans/legumes, and eggs.",
         "images": {
             "card": "proteinCard",
             "dull": "proteinDull",
             "color": "proteinColor"
         },
         "increment": 10,
-        "suggestedAmount": 100,
+        "suggestedAmount": 80,
         "unit": "g"
     },
     {
@@ -60,6 +60,8 @@
             "dull": "customDull",
             "color": "customColor"
         },
-        "suggestedAmount": 0
+        "increment": 1,
+        "suggestedAmount": 0,
+        "unit": ""
     }
 ]
