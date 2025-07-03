@@ -8,6 +8,7 @@ type Goal = {
     increment: number;
     unit: string;
     trackedAmount: number;
+    customTitle?: string;
     dullImage: ImageSourcePropType;
     colorImage: ImageSourcePropType;
 };
@@ -17,6 +18,7 @@ type GoalContextType = {
     addGoal: (goal: Goal) => void;
     removeGoal: (indexToRemove: number) => void;
     updateTrackedAmount: (indexToUpdate: number, newAmount: number) => void;
+    updateGoalAmount: (indexToUpdate: number, newAmount: number) => void;
     streak: number;
     didCompleteToday: boolean;
     completeGoalToday: (index: number) => void;
@@ -237,10 +239,22 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
             return updatedGoals;
         });
     };
+    const updateGoalAmount = (indexToUpdate: number, newAmount: number) => {
+        setGoals(prevGoals => {
+            const updatedGoals = [...prevGoals];
+            const goal = updatedGoals[indexToUpdate];
+
+            updatedGoals[indexToUpdate] = {
+                ...goal,
+                amount: newAmount,
+            };
+            return updatedGoals;
+        })
+    }
 
     return (
         <GoalContext.Provider value={{ 
-            goals, addGoal, removeGoal, updateTrackedAmount, 
+            goals, addGoal, removeGoal, updateTrackedAmount, updateGoalAmount,
             streak, didCompleteToday,
             completeGoalToday, completedIndexesToday,
             hasShownStreakToday, setHasShownStreakToday }}>

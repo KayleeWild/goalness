@@ -7,7 +7,7 @@ type Props = {
     suggested: number;
     unit: string;
     onClose: () => void;
-    onConfirm: (intakeAmount: number, unit: string) => void;
+    onConfirm: (intakeAmount: number, unit: string, customTitle: string) => void;
 };
 
 export default function CustomGoalSetupModal({customTitle, visible, suggested, unit, onClose, onConfirm}: Props) {
@@ -24,7 +24,7 @@ export default function CustomGoalSetupModal({customTitle, visible, suggested, u
   const handleConfirm = () => {
       const parsed = Number(inputValue);
       if (!isNaN(parsed)) {
-          onConfirm(parsed, customUnit);
+          onConfirm(parsed, customUnit, customTitle);
           setIsEditing(false);
           setInputValue(String(inputValue));
       }

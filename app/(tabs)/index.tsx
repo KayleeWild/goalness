@@ -11,6 +11,7 @@ import GoalSummary from "@/components/GoalSummary";
 import StreakModal from '@/components/StreakModal';
 import StreakInfo from '@/components/StreakInfo';
 import { useGoalContext } from "@/context/GoalContext";
+import GoalSummaryInfoModal from "@/components/GoalSummaryInfoModal";
 
 // constants
 const FONT_SIZE = 22
@@ -23,8 +24,9 @@ export default function Index() {
   const [showStreakModal, setShowStreakModal] = useState(false);
   // const [hasShownStreakToday, setHasShownStreakToday] = useState(false);
   const [showStreakInfo, setShowStreakInfo] = useState(false);
+
   const { goalAmount, goalTitle, refresh } = useLocalSearchParams();
-  const { goals, removeGoal, streak } = useGoalContext();
+  const { goals, removeGoal, streak, updateGoalAmount } = useGoalContext();
   const { hasShownStreakToday, setHasShownStreakToday } = useGoalContext();
 
   const renderGoals = () => {
@@ -35,17 +37,17 @@ export default function Index() {
         elements.push(
           <View key={i} style={styles.goalRow}>
             <View style={{ flex: 1 }}>
-              <GoalSummary 
-                index={i}
-                goal={goals[i]}
-                onGoalCompleted={() => {
-                  setShowConfetti(true)
-                  if (!hasShownStreakToday) {
-                    setHasShownStreakToday(true);
-                    setShowStreakModal(true);
-                  }
-                }}
-              />
+                <GoalSummary
+                  index={i}
+                  goal={goals[i]}
+                  onGoalCompleted={() => {
+                    setShowConfetti(true)
+                    if (!hasShownStreakToday) {
+                      setHasShownStreakToday(true);
+                      setShowStreakModal(true);
+                    }
+                  }}
+                />
             </View>
             {editMode && (
               <Pressable onPress={() => [removeGoal(i), setEditMode(false)]} style={styles.trashButton}>
@@ -77,7 +79,7 @@ export default function Index() {
     if (goalAmount && goalTitle) {
       const parsedAmount = parseInt(goalAmount as string);
       if (!isNaN(parsedAmount)) {
-        setCurrentGoal({ amount: parsedAmount, title: goalTitle as string});
+        setCurrentGoal({ amount: parsedAmount, title: goalTitle as string });
       }
     }
   }, [goalAmount, goalTitle, refresh]);
@@ -109,15 +111,15 @@ export default function Index() {
       </View>
       {showConfetti && (
         <View style={[StyleSheet.absoluteFillObject, { zIndex: 999 }]}>
-            <ConfettiCannon
-                count={100}
-                origin={{ x: width / 2, y: height - 50 }}
-                fadeOut
-                autoStart
-                explosionSpeed={200}
-                fallSpeed={2000}
-                onAnimationEnd={() => setShowConfetti(false)}
-            />
+          <ConfettiCannon
+            count={100}
+            origin={{ x: width / 2, y: height - 50 }}
+            fadeOut
+            autoStart
+            explosionSpeed={200}
+            fallSpeed={2000}
+            onAnimationEnd={() => setShowConfetti(false)}
+          />
         </View>
       )}
       {showStreakModal && (
@@ -126,6 +128,7 @@ export default function Index() {
       {showStreakInfo && (
         <StreakInfo onClose={() => setShowStreakInfo(false)} />
       )}
+      
     </View>
   );
 };

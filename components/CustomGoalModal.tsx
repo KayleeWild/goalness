@@ -10,7 +10,7 @@ type Props = {
     description: string;
     suggested: number;
     unit: string;
-    onAdd: (intakeAmount: number, customUnit: string) => void;
+    onAdd: (intakeAmount: number, customUnit: string, customTitle: string) => void;
     onClose: () => void;
 };
 
@@ -69,10 +69,10 @@ export default function CustomGoalModal({visible, title, description, suggested,
                     unit={unit}
                     suggested={suggested}
                     onClose={() => setShowSetup(false)}
-                    onConfirm={(intakeAmount, customUnit) => {
+                    onConfirm={(intakeAmount, customUnit, customTitle) => {
                         console.log("Confirmed goal amount: ", intakeAmount);
                         setShowSetup(false);
-                        onAdd(intakeAmount, customUnit);
+                        onAdd(intakeAmount, customUnit, customTitle);
                     }}
                 />
             </View>

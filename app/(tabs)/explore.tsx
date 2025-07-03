@@ -8,14 +8,6 @@ import { useGoalContext } from "@/context/GoalContext";
 import imageMap from "@/assets/images/imageMap";
 import CustomGoalModal from "@/components/CustomGoalModal";
 
-
-// Dynamically import images
-// ⚠️ Make sure to update this when adding new images!! ➡️ "filename.png": require('path/to/image/filename.png'),
-// const imageMap: { [key: string]: any } = {
-//   "waterBackground.png": require("@/assets/images/waterBackground.png"),
-//   "sleepBackground.png": require("@/assets/images/sleepBackground.png"),
-// };
-
 export default function ExploreScreen() {
   const [selectedGoal, setSelectedGoal] = useState<null | typeof goalTemplates[0]>(null);
   const { addGoal } = useGoalContext();
@@ -33,6 +25,7 @@ export default function ExploreScreen() {
                 />
             ))}
         </View>
+        {/* If selected goal is a custom goal */}
         {selectedGoal && selectedGoal.title == "Custom" && (
           <CustomGoalModal
             visible={!!selectedGoal}
@@ -40,25 +33,28 @@ export default function ExploreScreen() {
             description={selectedGoal.description}
             suggested={selectedGoal.suggestedAmount}
             unit={selectedGoal.unit}
-            onAdd={(intakeAmount, customUnit) => {
+            onAdd={(intakeAmount, customUnit, customTitle) => {
                 addGoal({ 
                   amount: intakeAmount, 
                   title: selectedGoal.title, 
                   increment: selectedGoal.increment,
                   unit: customUnit,
                   trackedAmount: 0,
+                  customTitle: customTitle,
                   dullImage: imageMap[selectedGoal.images.dull],
-                    colorImage: imageMap[selectedGoal.images.color]});
+                  colorImage: imageMap[selectedGoal.images.color]
+                });
                 setSelectedGoal(null);
-                  router.push('/');
-                  console.log(`Added goal: ${selectedGoal.title}`);
+                router.push('/');
+                console.log(`Added goal: ${selectedGoal.title}`);
               }}
             onClose={() => setSelectedGoal(null)}
           >
             
           </CustomGoalModal>
         )}
-        {selectedGoal && (
+        {/* If selected goal is not custom */}
+        {selectedGoal && selectedGoal.title != "Custom" && (
             <GoalModal
               visible={!!selectedGoal}
               title={selectedGoal.title}
@@ -73,10 +69,11 @@ export default function ExploreScreen() {
                   unit: selectedGoal.unit,
                   trackedAmount: 0,
                   dullImage: imageMap[selectedGoal.images.dull],
-                    colorImage: imageMap[selectedGoal.images.color]});
+                  colorImage: imageMap[selectedGoal.images.color]
+                });
                 setSelectedGoal(null);
-                  router.push('/');
-                  console.log(`Added goal: ${selectedGoal.title}`);
+                router.push('/');
+                console.log(`Added goal: ${selectedGoal.title}`);
               }}
               onClose={() => setSelectedGoal(null)}
             />
@@ -88,9 +85,6 @@ export default function ExploreScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fdfdfd'
-    // flex:  1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   grid: {
     flexDirection: "row",
