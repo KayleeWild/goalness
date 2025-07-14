@@ -25,6 +25,10 @@ type GoalContextType = {
     completedIndexesToday: number[];
     hasShownStreakToday: boolean;
     setHasShownStreakToday: (val: boolean) => void;
+    goalCompletionTotals: Record<string, number>;
+    incrementGoalCompletionTotal: (goalTitle: string) => void;
+    decrementGoalCompletionTotal: (goalTitle: string) => void;
+    bestStreak: number;
 };
 
 const GoalContext = createContext<GoalContextType | undefined>(undefined);
@@ -33,10 +37,13 @@ const GoalContext = createContext<GoalContextType | undefined>(undefined);
 export const GoalProvider = ({ children }: { children: ReactNode }) => {
     const [ goals, setGoals ] = useState<Goal[]>([]);
     const [ streak, setStreak ] = useState(0);
+    const [bestStreak, setBestStreak] = useState(0);
     const [ didCompleteToday, setDidCompleteToday ] = useState(false);
     const [ lastCheckDate, setLastCheckDate ] = useState('');
     const [completedIndexesToday, setCompletedIndexesToday] = useState<number[]>([]);
     const [hasShownStreakToday, setHasShownStreakToday] = useState(false);
+    const [goalCompletionTotals, setGoalCompletionTotals] = useState<Record<string, number>>({});
+
     const getToday = () => new Date().toISOString().split('T')[0];
     const getYesterday = useCallback(() => {
         const yesterday = new Date();
@@ -143,6 +150,33 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
         loadData();
     }, []);
 
+    // Load high scores
+    useEffect(() => {
+        const loadTotals = async () => {
+            const json = await AsyncStorage.getItem('goalCompletionTotals');
+            if (json) setGoalCompletionTotals(JSON.parse(json));
+        };
+        loadTotals();
+    }, []);
+
+    // Update high scores when they change
+    useEffect(() => {
+        AsyncStorage.setItem('goalCompletionTotals', JSON.stringify(goalCompletionTotals));
+    }, [goalCompletionTotals]);
+
+    // Update best streak when it changes
+    useEffect(() => {
+        AsyncStorage.setItem('userStreak', streak.toString());
+        AsyncStorage.setItem('bestStreak', bestStreak.toString());
+    }, [streak, bestStreak]);
+    useEffect(() => {
+        const loadBest = async () => {
+            const json = await AsyncStorage.getItem('bestStreak');
+            if (json) setBestStreak(Number(json));
+        };
+        loadBest();
+    }, []);
+
     // Save goals whenever they change
     useEffect(() => {
         AsyncStorage.setItem('userGoals', JSON.stringify(goals));
@@ -184,21 +218,6 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
         return anyCompleted;
     };
 
-    // complete goal and increment streak
-    const completeGoalToday = (index: number) => {
-        setCompletedIndexesToday(prev => {
-            if (!prev.includes(index)) {
-                const updated = [...prev, index];
-                if (!didCompleteToday) {
-                    setStreak(s => s + 1);
-                    setDidCompleteToday(true);
-                }
-                return updated;
-            }
-            return prev;
-        });
-    };
-
     // ⬇ Goal manipulation functions:
     const addGoal = (goal: Goal) => {
         setGoals(prev => [...prev, goal]);
@@ -210,7 +229,11 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
                 text: 'Delete Goal',
                 onPress: () => {
                     setGoals(prev => {
+                        const removedGoal = prev[indexToRemove];
                         const updated = prev.filter((_, index) => index !== indexToRemove);
+                        if (completedIndexesToday.includes(indexToRemove)) {
+                            decrementGoalCompletionTotal(removedGoal.title);
+                        }
                         recalculateTodayStatus(updated);
                         return updated;
                     });
@@ -223,6 +246,26 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
                 style: 'cancel'
             }
         ]);
+    };
+    // complete goal and increment streak
+    const completeGoalToday = (index: number) => {
+        setCompletedIndexesToday(prev => {
+            if (!prev.includes(index)) {
+                const updated = [...prev, index];
+                incrementGoalCompletionTotal(goals[index].title);
+                if (!didCompleteToday) {
+                    const newStreak = streak + 1;
+                    if (newStreak > bestStreak) {
+                        setBestStreak(newStreak);
+                    }
+                    setStreak(newStreak);
+                    setDidCompleteToday(true);
+                    // updateGoalHighScore(goals[index].title, newStreak);
+                }
+                return updated;
+            }
+            return prev;
+        });
     };
     const updateTrackedAmount = (indexToUpdate: number, newAmount: number) => {
         setGoals(prevGoals => {
@@ -251,13 +294,40 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
             return updatedGoals;
         })
     }
+    // const updateGoalHighScore = (goalTitle: string, newStreak: number) => {
+    //     setGoalHighScores(prev => {
+    //         const currentHigh = prev[goalTitle] || 0;
+    //         if (newStreak > currentHigh) {
+    //             return {...prev, [goalTitle]: newStreak };
+    //         }
+    //         return prev;
+    //     });
+    // };
+    const incrementGoalCompletionTotal = (goalTitle: string) => {
+        setGoalCompletionTotals(prev => ({
+            ...prev,
+            [goalTitle]: (prev[goalTitle] || 0) + 1
+        }));
+    };
+
+    const decrementGoalCompletionTotal = (goalTitle: string) => {
+        setGoalCompletionTotals(prev => {
+            const current = prev[goalTitle] || 0;
+            return {
+                ...prev,
+                [goalTitle]: Math.max(current - 1, 0)
+            };
+        });
+    };
 
     return (
         <GoalContext.Provider value={{ 
             goals, addGoal, removeGoal, updateTrackedAmount, updateGoalAmount,
             streak, didCompleteToday,
             completeGoalToday, completedIndexesToday,
-            hasShownStreakToday, setHasShownStreakToday }}>
+            hasShownStreakToday, setHasShownStreakToday,
+            goalCompletionTotals, incrementGoalCompletionTotal, decrementGoalCompletionTotal,
+            bestStreak }}>
             {children}
         </GoalContext.Provider>
     );

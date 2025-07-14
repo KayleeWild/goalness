@@ -44,6 +44,19 @@ export default function TabsLayout() {
             />
         )
     }} />
+    <Tabs.Screen name="highscores"
+    options={{
+        title: 'Records',
+        tabBarActiveTintColor: "#B37EAC",
+        tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+                name={focused ? 'trophy' : 'trophy-outline'}
+                color={color}
+                size={22}
+            />
+        )
+    }}
+    />
     {/* <Tabs.Screen name="habits" /> */}
     {/* <Tabs.Screen name="more" /> */}
   </Tabs>
