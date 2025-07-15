@@ -29,6 +29,8 @@ type GoalContextType = {
     incrementGoalCompletionTotal: (goalTitle: string) => void;
     decrementGoalCompletionTotal: (goalTitle: string) => void;
     bestStreak: number;
+    simulateNewDay: () => Promise<void>;
+    simulateNewWeek: () => Promise<void>;
 };
 
 const GoalContext = createContext<GoalContextType | undefined>(undefined);
@@ -320,6 +322,33 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
         });
     };
 
+    // ⬇ Simulation functions
+    const simulateNewDay = async () => {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const fakeYesterday = yesterday.toISOString().split('T')[0];
+        await AsyncStorage.setItem('lastCheckDate', fakeYesterday);
+        console.log("Simulated a new day. LastCheckDate set to:", fakeYesterday);
+    }
+
+    const simulateNewWeek = async () => {
+        const twoWeeksAgo = new Date();
+        twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+        const getISOWeekNumber = (date: Date) => {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            const weekNo = Math.ceil((((d as any) - (yearStart as any)) / 8640000 + 1) / 7);
+            return `${d.getUTCFullYear()}-W${weekNo}`;
+        };
+
+        const fakeWeek = getISOWeekNumber(twoWeeksAgo);
+        await AsyncStorage.setItem('lastResetWeek', fakeWeek);
+        console.log("Simulated a new week. LastResetWeek set to:", fakeWeek);
+    };
+
     return (
         <GoalContext.Provider value={{ 
             goals, addGoal, removeGoal, updateTrackedAmount, updateGoalAmount,
@@ -327,7 +356,8 @@ export const GoalProvider = ({ children }: { children: ReactNode }) => {
             completeGoalToday, completedIndexesToday,
             hasShownStreakToday, setHasShownStreakToday,
             goalCompletionTotals, incrementGoalCompletionTotal, decrementGoalCompletionTotal,
-            bestStreak }}>
+            bestStreak,
+            simulateNewDay, simulateNewWeek}}>
             {children}
         </GoalContext.Provider>
     );

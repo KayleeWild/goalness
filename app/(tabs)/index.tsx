@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Text, View, StyleSheet, Alert, Pressable, Dimensions } from "react-native";
+import { Text, View, ScrollView, StyleSheet, Alert, Pressable, Dimensions } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { SwipeListView } from 'react-native-swipe-list-view';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
@@ -12,6 +12,7 @@ import StreakModal from '@/components/StreakModal';
 import StreakInfo from '@/components/StreakInfo';
 import { useGoalContext } from "@/context/GoalContext";
 import GoalSummaryInfoModal from "@/components/GoalSummaryInfoModal";
+import HiddenTests from "@/components/HiddenTests";
 
 // constants
 const FONT_SIZE = 22
@@ -94,7 +95,7 @@ export default function Index() {
   );
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.thisWeek}>
         <Pressable onPress={() => setShowStreakInfo(true)}>
           <Text style={styles.thisWeekText}>
@@ -128,8 +129,10 @@ export default function Index() {
       {showStreakInfo && (
         <StreakInfo onClose={() => setShowStreakInfo(false)} />
       )}
-      
-    </View>
+      {/* HIDDENTESTS IS JUST FOR DEMO PURPOSES!! DELETE AFTER DEMONSTRATING!! */}
+      <HiddenTests></HiddenTests> 
+
+    </ScrollView>
   );
 };
 
