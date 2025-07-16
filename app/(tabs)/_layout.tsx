@@ -31,7 +31,19 @@ export default function TabsLayout() {
             />
         ),  
     }} />
-    {/* <Tabs.Screen name="journal" /> */}
+    <Tabs.Screen name="journal" 
+    options={{
+        title: 'Journal',
+        tabBarActiveTintColor: "#B37EAC",
+        tabBarIcon: ({ color, focused }) => (
+            <Ionicons 
+                name={focused ? 'journal' : 'journal-outline'}
+                color={color}
+                size={22}
+            />
+        ),  
+    }}
+    />
     <Tabs.Screen name="explore"
     options={{
         title: 'Explore',
