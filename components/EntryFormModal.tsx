@@ -14,6 +14,8 @@ const prompts = [
   "What went well today?",
   "What challenged you today?",
   "What are you grateful for?",
+  "What can you do to break old habits?",
+  "What are some obstacles that can potentially prevent you from reaching your goal(s)?"
 ];
 
 const EntryFormModal: React.FC<Props> = ({ visible, onClose, onSubmit, initialData }) => {
