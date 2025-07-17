@@ -15,7 +15,7 @@ const prompts = [
   "What challenged you today?",
   "What are you grateful for?",
   "What can you do to break old habits?",
-  "What are some obstacles that can potentially prevent you from reaching your goal(s)?"
+  "What are some obstacles you face?"
 ];
 
 const EntryFormModal: React.FC<Props> = ({ visible, onClose, onSubmit, initialData }) => {
@@ -50,7 +50,7 @@ const EntryFormModal: React.FC<Props> = ({ visible, onClose, onSubmit, initialDa
                 selectedValue={prompt}
                 onValueChange={(itemValue) => setPrompt(itemValue)}
                 style={styles.picker}
-                itemStyle={{ color: '#222' }}
+                itemStyle={{ color: '#222', fontSize: 16}}
             >
                 {prompts.map((p, index) => (
                     <Picker.Item key={index} label={p} value={p} />
